@@ -38,4 +38,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/opendonationassistent/oda-widget-service:latest
+        tags: ghcr.io/opendonationassistent/oda-widgets-service:latest
