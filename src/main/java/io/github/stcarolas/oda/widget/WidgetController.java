@@ -16,10 +16,8 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller("/widgets")
-@Slf4j
 public class WidgetController {
 
   private final WidgetRepository widgetRepository;

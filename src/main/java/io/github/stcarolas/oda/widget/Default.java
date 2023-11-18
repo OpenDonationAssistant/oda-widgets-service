@@ -79,6 +79,20 @@ public class Default {
       }
     }
   """)
+  .put("donationtimer",
+  """
+    {
+      "config":{
+        "properties": [
+          {
+            "name": "fontSize",
+            "displayName": "Размер шрифта",
+            "value": "24"
+          }
+        ]
+      }
+    }
+  """)
   .mapValues(
     config -> Try.of(
       () -> mapper.readValue(config, Widget.class)
