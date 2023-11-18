@@ -79,7 +79,7 @@ public class Default {
       }
     }
   """)
-  .put("donationtimer",
+  .put("donation-timer",
   """
     {
       "config":{
