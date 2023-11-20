@@ -74,6 +74,27 @@ public class Default {
             "name": "fontSize",
             "displayName": "Размер шрифта",
             "value": "24"
+          },
+          {
+            "name": "font",
+            "displayName": "Шрифт",
+            "type":"fontselect",
+            "value": "Roboto"
+          },
+          {
+            "name": "type",
+            "displayName": "Тип виджета",
+            "value": "All"
+          },
+          {
+            "name": "period",
+            "displayName": "Период",
+            "value": "Month"
+          },
+          {
+            "name": "topsize",
+            "displayName": "Кол-во в топе",
+            "value": "3"
           }
         ]
       }
