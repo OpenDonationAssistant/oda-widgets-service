@@ -45,7 +45,7 @@ public class Default {
           {
             "name": "messageFontSize",
             "displayName": "Размер шрифта в сообщении",
-            "value": "19"
+            "value": "ROBOTO"
           }
         ]
       }
@@ -87,6 +87,12 @@ public class Default {
           {
             "name": "fontSize",
             "displayName": "Размер шрифта",
+            "value": "24"
+          },
+          {
+            "name": "font",
+            "displayName": "Шрифт",
+            "type":"fontselect",
             "value": "24"
           }
         ]
