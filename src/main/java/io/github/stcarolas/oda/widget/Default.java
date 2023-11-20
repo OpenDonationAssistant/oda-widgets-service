@@ -45,7 +45,7 @@ public class Default {
           {
             "name": "messageFontSize",
             "displayName": "Размер шрифта в сообщении",
-            "value": "ROBOTO"
+            "value": "24"
           }
         ]
       }
@@ -93,7 +93,13 @@ public class Default {
             "name": "font",
             "displayName": "Шрифт",
             "type":"fontselect",
-            "value": "24"
+            "value": "Roboto"
+          },
+          {
+            "name": "text",
+            "displayName": "Текст",
+            "type":"string",
+            "value": "Без донатов уже <time>"
           }
         ]
       }
