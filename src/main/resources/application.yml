@@ -2,8 +2,9 @@ micronaut:
   application:
     name: oda-widget-server
   security:
-    authentication: cookie
     token:
+      cookie:
+        enabled: true
       jwt:
         signatures:
           jwks:
