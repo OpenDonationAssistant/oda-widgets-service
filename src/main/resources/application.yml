@@ -3,6 +3,8 @@ micronaut:
     name: oda-widget-server
   security:
     token:
+      bearer:
+        enabled: true
       cookie:
         enabled: true
       jwt:
