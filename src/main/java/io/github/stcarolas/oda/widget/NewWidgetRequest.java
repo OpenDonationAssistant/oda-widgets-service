@@ -1,6 +1,5 @@
 package io.github.stcarolas.oda.widget;
 
-import lombok.Data;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable

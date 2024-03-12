@@ -5,12 +5,9 @@ import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
 import io.micronaut.data.model.DataType;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
-import lombok.ToString;
 
 @Serdeable
 @MappedEntity("widget")
-@ToString
 public class Widget {
 
   @Id
@@ -79,4 +76,22 @@ public class Widget {
     this.config = config;
   }
 
+  @Override
+  public String toString() {
+    return (
+      "{\"_type\"=\"Widget\",\"id\"=\"" +
+      id +
+      "\", type\"=\"" +
+      type +
+      "\", sortOrder\"=\"" +
+      sortOrder +
+      "\", name\"=\"" +
+      name +
+      "\", ownerId\"=\"" +
+      ownerId +
+      "\", config\"=\"" +
+      config +
+      "}"
+    );
+  }
 }

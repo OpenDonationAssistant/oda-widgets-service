@@ -12,6 +12,11 @@ micronaut:
           jwks:
             keycloak:
               url: https://auth.oda.digital/realms/ODA/protocol/openid-connect/certs
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
 datasources:
   default:
     url: ${JDBC_URL:`jdbc:postgresql://localhost/postgres?currentSchema=widget`}
@@ -30,3 +35,4 @@ jpa:
   default:
     entity-scan:
         packages: 'io.github.stcarolas.oda.widget'
+rabbitmq.host: ${RABBITMQ_HOST:`localhost`}

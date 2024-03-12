@@ -1,7 +1,6 @@
 package io.github.stcarolas.oda.widget;
 
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
 
 @Serdeable
 public class UpdateWidgetRequest {
