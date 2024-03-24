@@ -1,5 +1,8 @@
 package io.github.stcarolas.oda.widget;
 
+import java.util.List;
+import java.util.Map;
+
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
@@ -69,6 +72,9 @@ public class Widget {
   }
 
   public java.util.Map<String, Object> getConfig() {
+    if (config == null || config.isEmpty()) {
+      return Map.of("properties", List.of());
+    }
     return config;
   }
 

@@ -45,9 +45,8 @@ public class WidgetController {
     if (request.getType() != null) {
       widget.setConfig(
         Default.configs
-          .get(request.getType())
-          .map(Widget::getConfig)
-          .getOrElse(() -> new java.util.HashMap<String, Object>())
+          .getOrElse(request.getType(), new Widget())
+          .getConfig()
       );
     }
     widgetRepository.save(widget);
