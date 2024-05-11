@@ -36,7 +36,7 @@ public class WidgetController {
   public void add(@Body NewWidgetRequest request, Authentication auth) {
     var widget = new Widget();
     widget.setType(request.getType());
-    widget.setId(UUID.randomUUID().toString());
+    widget.setId(UUID.randomUUID().toString()); // todo change to uuidv7
     widget.setName(request.getType());
     widget.setOwnerId(getOwnerId(auth));
     widget.setSortOrder(
@@ -44,21 +44,29 @@ public class WidgetController {
     );
     if (request.getType() != null) {
       widget.setConfig(
-        Default.configs
-          .getOrElse(request.getType(), new Widget())
-          .getConfig()
+        Default.configs.getOrElse(request.getType(), new Widget()).getConfig()
       );
     }
     widgetRepository.save(widget);
     if (request.getType() != null) {
-      notificationSender.send(request.getType(), widget);
+      notificationSender.send(
+        request.getType(),
+        new WidgetChangedEvent("created", widget)
+      );
     }
   }
 
   @Delete("{id}")
   @Secured(SecurityRule.IS_AUTHENTICATED)
-  public void delete(@PathVariable("id") String id) {
+  public void delete(@PathVariable("id") String id, Authentication auth) {
+    Optional<Widget> widget = widgetRepository.find(getOwnerId(auth), id);
     widgetRepository.deleteById(id);
+    widget.ifPresent(it -> {
+      notificationSender.send(
+        it.getType(),
+        new WidgetChangedEvent("deleted", it)
+      );
+    });
   }
 
   @Patch("{id}")
@@ -88,7 +96,10 @@ public class WidgetController {
           request.getConfig() != null ? request.getConfig() : it.getConfig()
         );
         widgetRepository.update(updated);
-        notificationSender.send(it.getType(), updated);
+        notificationSender.send(
+          it.getType(),
+          new WidgetChangedEvent("updated", updated)
+        );
         return updated;
       })
       .map(updated -> HttpResponse.ok(updated))

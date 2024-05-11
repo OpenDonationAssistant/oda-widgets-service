@@ -12,13 +12,17 @@ import java.util.HashMap;
 public class WidgetRabbitConfiguration extends ChannelInitializer {
 
     public static final String REEL = "config.reel";
+    public static final String GOALS = "config.goals";
+    public static final String GOALS_KEY = "donationgoal";
     public static final String CHANGES_WIDGETS = "changes.widgets";
 
     @Override
     public void initialize(Channel channel, String name) throws IOException {
         channel.exchangeDeclare(CHANGES_WIDGETS, BuiltinExchangeType.TOPIC);
         channel.queueDeclare(REEL, true, false, false, new HashMap<>()); // (4)
+        channel.queueDeclare(GOALS, true, false, false, new HashMap<>()); // (4)
         channel.queueBind(REEL, CHANGES_WIDGETS, "reel");
+        channel.queueBind(GOALS, CHANGES_WIDGETS, GOALS_KEY);
     }
 
 }

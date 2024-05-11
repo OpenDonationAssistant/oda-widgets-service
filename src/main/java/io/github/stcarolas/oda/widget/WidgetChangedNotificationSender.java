@@ -5,5 +5,5 @@ import io.micronaut.rabbitmq.annotation.RabbitClient;
 
 @RabbitClient(WidgetRabbitConfiguration.CHANGES_WIDGETS)
 public interface WidgetChangedNotificationSender {
-  void send(@Binding String binding, Widget updated);
+  void send(@Binding String binding, WidgetChangedEvent event);
 }
