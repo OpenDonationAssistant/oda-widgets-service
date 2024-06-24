@@ -18,6 +18,7 @@ public class UpdateController {
 
   private final String PAYMENT_ALERTS_TYPE = "payment-alerts";
   private final String PLAYER_INFO_TYPE = "player-info";
+  private final String DONATION_TIMER_TYPE = "donation-timer";
 
   @Inject
   public UpdateController(WidgetRepository repository) {
@@ -55,7 +56,7 @@ public class UpdateController {
     widgetRepository
       .findAll()
       .stream()
-      .filter(widget -> PLAYER_INFO_TYPE.equals(widget.getType()))
+      .filter(widget -> DONATION_TIMER_TYPE.equals(widget.getType()))
       .forEach(widget -> {
         Map<String, Object> config = widget.getConfig();
         List props = (List) config.get("properties");
