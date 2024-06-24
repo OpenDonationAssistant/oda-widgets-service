@@ -72,7 +72,8 @@ public class UpdateController {
           .map(it -> (String)it)
           .orElse("#ffffff");
         Map<String, Object> newFont = new HashMap();
-        newFont.put("titleFont", newFontProperty(fontSize, fontName, color));
+        newFont.put("name","titleFont");
+        newFont.put("value", newFontProperty(fontSize, fontName, color));
         props.add(newFont);
         config.put("properties", props);
         widget.setConfig(config);
