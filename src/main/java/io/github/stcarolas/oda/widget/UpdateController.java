@@ -21,6 +21,7 @@ public class UpdateController {
   public static final String DONATION_TIMER_TYPE = "donation-timer";
   public static final String DONATION_GOAL_TYPE = "donationgoal";
   public static final String REEL_TYPE = "reel";
+  public static final String DONATERS_TOP_LIST_TYPE = "donaters-top-list";
 
   @Inject
   public UpdateController(WidgetRepository repository) {
@@ -58,26 +59,42 @@ public class UpdateController {
     widgetRepository
       .findAll()
       .stream()
-      .filter(widget -> REEL_TYPE.equals(widget.getType()))
+      .filter(widget -> DONATERS_TOP_LIST_TYPE.equals(widget.getType()))
       .forEach(widget -> {
         Map<String, Object> config = widget.getConfig();
         List props = (List) config.get("properties");
-        int fontSize = findProperty(props, "fontSize")
+        int fontSize = findProperty(props, "titleFontSize")
           .map(it -> ((Map<String, Object>)it).get("value"))
           .map(it -> (Integer)Integer.parseInt(it.toString()))
           .orElse(24);
-        String fontName = findProperty(props, "font")
+        String fontName = findProperty(props, "titleFont")
           .map(it -> ((Map<String, Object>)it).get("value"))
           .map(it -> (String)it)
           .orElse("Roboto");
-        String color = findProperty(props, "color")
+        String color = findProperty(props, "titleColor")
           .map(it -> ((Map<String, Object>)it).get("value"))
           .map(it -> (String)it)
           .orElse("#ffffff");
         Map<String, Object> newFont = new HashMap();
-        newFont.put("name","titleFont");
+        newFont.put("name","headerFont");
         newFont.put("value", newFontProperty(fontSize, fontName, color));
         props.add(newFont);
+        int messageFontSize = findProperty(props, "fontSize")
+          .map(it -> ((Map<String, Object>)it).get("value"))
+          .map(it -> (Integer)Integer.parseInt(it.toString()))
+          .orElse(24);
+        String messageFontName = findProperty(props, "font")
+          .map(it -> ((Map<String, Object>)it).get("value"))
+          .map(it -> (String)it)
+          .orElse("Roboto");
+        String messageColor = findProperty(props, "color")
+          .map(it -> ((Map<String, Object>)it).get("value"))
+          .map(it -> (String)it)
+          .orElse("#ffffff");
+        Map<String, Object> messageFont = new HashMap();
+        messageFont.put("name","messageFont");
+        messageFont.put("value", newFontProperty(messageFontSize, messageFontName, messageColor));
+        props.add(messageFont);
         config.put("properties", props);
         widget.setConfig(config);
         widgetRepository.update(widget);
