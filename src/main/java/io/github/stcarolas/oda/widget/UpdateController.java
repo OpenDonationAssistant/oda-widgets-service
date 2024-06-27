@@ -87,7 +87,7 @@ public class UpdateController {
             Map<String, Object> newFont = new HashMap();
             newFont.put("name", "headerFont");
             newFont.put("value", newFontProperty(fontSize, fontName, color));
-            props.add(newFont);
+            // props.add(newFont);
             int messageFontSize = findProperty(props, "messageFontSize")
               .map(it -> ((Map<String, Object>) it).get("value"))
               .map(it -> (Integer) Integer.parseInt(it.toString()))
@@ -109,7 +109,8 @@ public class UpdateController {
             Map<String, Object> appearance = new HashMap();
             messageFont.put("name", "appearance");
             messageFont.put("value", "none");
-            props.add(appearance);
+            // props.add(appearance);
+            props.add(messageFont);
             ((Map<String, Object>) alert).put("properties", props);
             return alert;
           })
