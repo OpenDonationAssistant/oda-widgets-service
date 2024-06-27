@@ -106,9 +106,9 @@ public class UpdateController {
               "value",
               newFontProperty(messageFontSize, messageFontName, messageColor)
             );
-            Map<String, Object> appearance = new HashMap();
-            messageFont.put("name", "appearance");
-            messageFont.put("value", "none");
+            // Map<String, Object> appearance = new HashMap();
+            // messageFont.put("name", "appearance");
+            // messageFont.put("value", "none");
             // props.add(appearance);
             props.add(messageFont);
             ((Map<String, Object>) alert).put("properties", props);
