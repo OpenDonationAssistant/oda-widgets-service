@@ -65,6 +65,9 @@ public class UpdateController {
       .forEach(widget -> {
         Map<String, Object> config = widget.getConfig();
         List alerts = (List) config.get("alerts");
+        if (alerts == null){
+          return;
+        }
         List updatedAlerts = alerts
           .stream()
           .map(alert -> {
