@@ -1,15 +1,14 @@
 package io.github.stcarolas.oda.widget;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller("/update")
 public class UpdateController {
@@ -28,28 +27,31 @@ public class UpdateController {
     this.widgetRepository = repository;
   }
 
-
-  private Optional<Object> findProperty(List props, String name){
-      return props.stream().filter(prop -> 
-        name.equals(((Map<String, Object>)prop).get("name"))
-      ).findFirst();
-
+  private Optional<Object> findProperty(List props, String name) {
+    return props
+      .stream()
+      .filter(prop -> name.equals(((Map<String, Object>) prop).get("name")))
+      .findFirst();
   }
 
-  private Map<String, Object> newFontProperty(int size, String font, String color){
+  private Map<String, Object> newFontProperty(
+    int size,
+    String font,
+    String color
+  ) {
     Map<String, Object> value = new HashMap<>();
-    value.put("size",size);
-    value.put("color",color);
+    value.put("size", size);
+    value.put("color", color);
     value.put("family", font);
-    value.put("italic",false);
-    value.put("weight",false);
-    value.put("underline",false);
-    value.put("animation","none");
-    value.put("animationType","entire");
-    value.put("shadowColor","#000000");
-    value.put("shadowWidth",0);
-    value.put("shadowOffsetX",0);
-    value.put("shadowOffsetY",0);
+    value.put("italic", false);
+    value.put("weight", false);
+    value.put("underline", false);
+    value.put("animation", "none");
+    value.put("animationType", "entire");
+    value.put("shadowColor", "#000000");
+    value.put("shadowWidth", 0);
+    value.put("shadowOffsetX", 0);
+    value.put("shadowOffsetY", 0);
     return value;
   }
 
@@ -59,52 +61,66 @@ public class UpdateController {
     widgetRepository
       .findAll()
       .stream()
-      .filter(widget -> DONATERS_TOP_LIST_TYPE.equals(widget.getType()))
+      .filter(widget -> PAYMENT_ALERTS_TYPE.equals(widget.getType()))
       .forEach(widget -> {
         Map<String, Object> config = widget.getConfig();
-        List props = (List) config.get("properties");
-        int fontSize = findProperty(props, "titleFontSize")
-          .map(it -> ((Map<String, Object>)it).get("value"))
-          .map(it -> (Integer)Integer.parseInt(it.toString()))
-          .orElse(24);
-        String fontName = findProperty(props, "titleFont")
-          .map(it -> ((Map<String, Object>)it).get("value"))
-          .map(it -> (String)it)
-          .orElse("Roboto");
-        String color = findProperty(props, "titleColor")
-          .map(it -> ((Map<String, Object>)it).get("value"))
-          .map(it -> (String)it)
-          .orElse("#ffffff");
-        Map<String, Object> newFont = new HashMap();
-        newFont.put("name","headerFont");
-        newFont.put("value", newFontProperty(fontSize, fontName, color));
-        props.add(newFont);
-        int messageFontSize = findProperty(props, "fontSize")
-          .map(it -> ((Map<String, Object>)it).get("value"))
-          .map(it -> (Integer)Integer.parseInt(it.toString()))
-          .orElse(24);
-        String messageFontName = findProperty(props, "font")
-          .map(it -> ((Map<String, Object>)it).get("value"))
-          .map(it -> (String)it)
-          .orElse("Roboto");
-        String messageColor = findProperty(props, "color")
-          .map(it -> ((Map<String, Object>)it).get("value"))
-          .map(it -> (String)it)
-          .orElse("#ffffff");
-        Map<String, Object> messageFont = new HashMap();
-        messageFont.put("name","messageFont");
-        messageFont.put("value", newFontProperty(messageFontSize, messageFontName, messageColor));
-        props.add(messageFont);
-        config.put("properties", props);
+        List alerts = (List) config.get("alerts");
+        List updatedAlerts = alerts
+          .stream()
+          .map(alert -> {
+            List props = (List)((Map<String, Object>) alert).get("properties");
+            int fontSize = findProperty(props, "nicknameFontSize")
+              .map(it -> ((Map<String, Object>) it).get("value"))
+              .map(it -> (Integer) Integer.parseInt(it.toString()))
+              .orElse(24);
+            String fontName = findProperty(props, "nicknameFont")
+              .map(it -> ((Map<String, Object>) it).get("value"))
+              .map(it -> (String) it)
+              .orElse("Roboto");
+            String color = findProperty(props, "headerColor")
+              .map(it -> ((Map<String, Object>) it).get("value"))
+              .map(it -> (String) it)
+              .orElse("#ffffff");
+            Map<String, Object> newFont = new HashMap();
+            newFont.put("name", "headerFont");
+            newFont.put("value", newFontProperty(fontSize, fontName, color));
+            props.add(newFont);
+            int messageFontSize = findProperty(props, "messageFontSize")
+              .map(it -> ((Map<String, Object>) it).get("value"))
+              .map(it -> (Integer) Integer.parseInt(it.toString()))
+              .orElse(24);
+            String messageFontName = findProperty(props, "messageFont")
+              .map(it -> ((Map<String, Object>) it).get("value"))
+              .map(it -> (String) it)
+              .orElse("Roboto");
+            String messageColor = findProperty(props, "messageColor")
+              .map(it -> ((Map<String, Object>) it).get("value"))
+              .map(it -> (String) it)
+              .orElse("#ffffff");
+            Map<String, Object> messageFont = new HashMap();
+            messageFont.put("name", "font");
+            messageFont.put(
+              "value",
+              newFontProperty(messageFontSize, messageFontName, messageColor)
+            );
+            Map<String, Object> appearance = new HashMap();
+            messageFont.put("name", "appearance");
+            messageFont.put("value", "none");
+            props.add(appearance);
+            ((Map<String, Object>) alert).put("properties", props);
+            return alert;
+          })
+          .toList();
+        config.put("alerts", updatedAlerts);
         widget.setConfig(config);
         widgetRepository.update(widget);
       });
-      // .filter(widget -> PAYMENT_ALERTS_TYPE.equals(widget.getType()))
-      // .forEach(widget -> {
-      //   Map<String, Object> config = widget.getConfig();
-      //   List<Object> alerts = (List<Object>)config.get("alerts");
-      //   alerts.forEach(alert -> {
-      //   });
-      // });
+    // .filter(widget -> PAYMENT_ALERTS_TYPE.equals(widget.getType()))
+    // .forEach(widget -> {
+    //   Map<String, Object> config = widget.getConfig();
+    //   List<Object> alerts = (List<Object>)config.get("alerts");
+    //   alerts.forEach(alert -> {
+    //   });
+    // });
   }
 }
