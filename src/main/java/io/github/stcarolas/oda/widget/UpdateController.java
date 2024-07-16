@@ -9,11 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller("/update")
 public class UpdateController {
 
   private final WidgetRepository widgetRepository;
+  private final Logger log = LoggerFactory.getLogger(UpdateController.class);
 
   public static final String PAYMENT_ALERTS_TYPE = "payment-alerts";
   public static final String PLAYER_INFO_TYPE = "player-info";
@@ -32,6 +35,13 @@ public class UpdateController {
       .stream()
       .filter(prop -> name.equals(((Map<String, Object>) prop).get("name")))
       .findFirst();
+  }
+
+  private List<?> removeProperty(List<?> props, String name) {
+    return props
+      .stream()
+      .filter(prop -> !name.equals(((Map<String, Object>) prop).get("name")))
+      .toList();
   }
 
   private Map<String, Object> newFontProperty(
@@ -58,6 +68,7 @@ public class UpdateController {
   @Post
   @Secured(SecurityRule.IS_ANONYMOUS)
   public void runUpdate() {
+    log.info("Running update");
     widgetRepository
       .findAll()
       .stream()
@@ -65,53 +76,22 @@ public class UpdateController {
       .forEach(widget -> {
         Map<String, Object> config = widget.getConfig();
         List alerts = (List) config.get("alerts");
-        if (alerts == null){
+        if (alerts == null) {
           return;
         }
         List updatedAlerts = alerts
           .stream()
           .map(alert -> {
-            List props = (List)((Map<String, Object>) alert).get("properties");
-            int fontSize = findProperty(props, "nicknameFontSize")
-              .map(it -> ((Map<String, Object>) it).get("value"))
-              .map(it -> (Integer) Integer.parseInt(it.toString()))
-              .orElse(24);
-            String fontName = findProperty(props, "nicknameFont")
-              .map(it -> ((Map<String, Object>) it).get("value"))
-              .map(it -> (String) it)
-              .orElse("Roboto");
-            String color = findProperty(props, "headerColor")
-              .map(it -> ((Map<String, Object>) it).get("value"))
-              .map(it -> (String) it)
-              .orElse("#ffffff");
-            Map<String, Object> newFont = new HashMap();
-            newFont.put("name", "headerFont");
-            newFont.put("value", newFontProperty(fontSize, fontName, color));
-            // props.add(newFont);
-            int messageFontSize = findProperty(props, "messageFontSize")
-              .map(it -> ((Map<String, Object>) it).get("value"))
-              .map(it -> (Integer) Integer.parseInt(it.toString()))
-              .orElse(24);
-            String messageFontName = findProperty(props, "messageFont")
-              .map(it -> ((Map<String, Object>) it).get("value"))
-              .map(it -> (String) it)
-              .orElse("Roboto");
-            String messageColor = findProperty(props, "messageColor")
-              .map(it -> ((Map<String, Object>) it).get("value"))
-              .map(it -> (String) it)
-              .orElse("#ffffff");
-            Map<String, Object> messageFont = new HashMap();
-            messageFont.put("name", "font");
-            messageFont.put(
-              "value",
-              newFontProperty(messageFontSize, messageFontName, messageColor)
-            );
-            // Map<String, Object> appearance = new HashMap();
-            // messageFont.put("name", "appearance");
-            // messageFont.put("value", "none");
-            // props.add(appearance);
-            props.add(messageFont);
-            ((Map<String, Object>) alert).put("properties", props);
+            List props = (List) ((Map<String, Object>) alert).get("properties");
+            props = removeProperty(props, "messageFontSize");
+            props = removeProperty(props, "messageFont");
+            props = removeProperty(props, "messageColor");
+            if (findProperty(props, "audio-volume").isEmpty()) {
+              var audioVolumeProperty = new HashMap<String, Object>();
+              audioVolumeProperty.put("name", "audio-volume");
+              audioVolumeProperty.put("value", 100);
+              ((Map<String, Object>) alert).put("properties", props);
+            }
             return alert;
           })
           .toList();
@@ -119,6 +99,7 @@ public class UpdateController {
         widget.setConfig(config);
         widgetRepository.update(widget);
       });
+    log.info("Update finished");
     // .filter(widget -> PAYMENT_ALERTS_TYPE.equals(widget.getType()))
     // .forEach(widget -> {
     //   Map<String, Object> config = widget.getConfig();
