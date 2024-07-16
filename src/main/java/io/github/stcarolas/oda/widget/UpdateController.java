@@ -5,6 +5,8 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +84,7 @@ public class UpdateController {
         List updatedAlerts = alerts
           .stream()
           .map(alert -> {
-            List props = (List) ((Map<String, Object>) alert).get("properties");
+            List props = new ArrayList((List) ((Map<String, Object>) alert).get("properties"));
             props = removeProperty(props, "nicknameFont");
             props = removeProperty(props, "nicknameFontSize");
             props = removeProperty(props, "headerColor");
