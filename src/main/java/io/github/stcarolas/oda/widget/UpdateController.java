@@ -83,15 +83,16 @@ public class UpdateController {
           .stream()
           .map(alert -> {
             List props = (List) ((Map<String, Object>) alert).get("properties");
-            props = removeProperty(props, "messageFontSize");
-            props = removeProperty(props, "messageFont");
-            props = removeProperty(props, "messageColor");
+            props = removeProperty(props, "nicknameFont");
+            props = removeProperty(props, "nicknameFontSize");
+            props = removeProperty(props, "headerColor");
             if (findProperty(props, "audio-volume").isEmpty()) {
               var audioVolumeProperty = new HashMap<String, Object>();
               audioVolumeProperty.put("name", "audio-volume");
               audioVolumeProperty.put("value", 100);
-              ((Map<String, Object>) alert).put("properties", props);
+              props.add(audioVolumeProperty);
             }
+            ((Map<String, Object>) alert).put("properties", props);
             return alert;
           })
           .toList();
