@@ -5,7 +5,6 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,11 +31,17 @@ public class UpdateController {
     this.widgetRepository = repository;
   }
 
-  private Optional<Object> findProperty(List props, String name) {
+  private Optional<Map<String, Object>> findProperty(List props, String name) {
     return props
       .stream()
       .filter(prop -> name.equals(((Map<String, Object>) prop).get("name")))
       .findFirst();
+  }
+
+  private <T> Optional<T> findValue(List props, String name) {
+    return findProperty(props, name)
+      .map(prop -> prop.get("value"))
+      .map(value -> (T) value);
   }
 
   private List<?> removeProperty(List<?> props, String name) {
@@ -46,25 +51,12 @@ public class UpdateController {
       .toList();
   }
 
-  private Map<String, Object> newFontProperty(
-    int size,
-    String font,
-    String color
-  ) {
-    Map<String, Object> value = new HashMap<>();
-    value.put("size", size);
-    value.put("color", color);
-    value.put("family", font);
-    value.put("italic", false);
-    value.put("weight", false);
-    value.put("underline", false);
-    value.put("animation", "none");
-    value.put("animationType", "entire");
-    value.put("shadowColor", "#000000");
-    value.put("shadowWidth", 0);
-    value.put("shadowOffsetX", 0);
-    value.put("shadowOffsetY", 0);
-    return value;
+  private Map<String,Object> defaultBorderValue(){
+    var border = new HashMap<String, Object>();
+    border.put("width",0);
+    border.put("color","#FFFFFF");
+    border.put("type","solid");
+    return border;
   }
 
   @Post
@@ -74,42 +66,39 @@ public class UpdateController {
     widgetRepository
       .findAll()
       .stream()
-      .filter(widget -> PAYMENT_ALERTS_TYPE.equals(widget.getType()))
+      .filter(widget -> REEL_TYPE.equals(widget.getType()))
       .forEach(widget -> {
         Map<String, Object> config = widget.getConfig();
-        List alerts = (List) config.get("alerts");
-        if (alerts == null) {
+        List props = new ArrayList<Object>();
+        props.addAll((List) config.get("properties"));
+        if (props == null || props.isEmpty()) {
           return;
         }
-        List updatedAlerts = alerts
-          .stream()
-          .map(alert -> {
-            List props = (List) ((Map<String, Object>) alert).get("properties");
-            props = removeProperty(props, "nicknameFont");
-            props = removeProperty(props, "nicknameFontSize");
-            props = removeProperty(props, "headerColor");
-            props  = new ArrayList<>(props);
-            if (findProperty(props, "audio-volume").isEmpty()) {
-              var audioVolumeProperty = new HashMap<String, Object>();
-              audioVolumeProperty.put("name", "audio-volume");
-              audioVolumeProperty.put("value", 100);
-              props.add(audioVolumeProperty);
-            }
-            ((Map<String, Object>) alert).put("properties", props);
-            return alert;
-          })
-          .toList();
-        config.put("alerts", updatedAlerts);
+        Optional<String> borderColor = findValue(props, "borderColor");
+        Optional<Integer> borderWidth = findValue(props, "borderWidth");
+        if (borderColor.isEmpty() || borderWidth.isEmpty()) {
+          return;
+        }
+        Map<String, Object> borderValue = defaultBorderValue();
+        borderValue.put("color",borderColor.get());
+        borderValue.put("width",borderWidth.get());
+
+        var borderProperty = new HashMap<String, Object>();
+        borderProperty.put("name", "cardBorder");
+
+        var borderPropertyValue = new HashMap<String, Object>();
+        borderPropertyValue.put("isSame", true);
+        borderPropertyValue.put("bottom",defaultBorderValue());
+        borderPropertyValue.put("left",defaultBorderValue());
+        borderPropertyValue.put("right",defaultBorderValue());
+        borderPropertyValue.put("top",borderValue);
+
+        borderProperty.put("value", borderPropertyValue);
+        props.add(borderProperty);
+        config.put("properties", props);
         widget.setConfig(config);
         widgetRepository.update(widget);
       });
     log.info("Update finished");
-    // .filter(widget -> PAYMENT_ALERTS_TYPE.equals(widget.getType()))
-    // .forEach(widget -> {
-    //   Map<String, Object> config = widget.getConfig();
-    //   List<Object> alerts = (List<Object>)config.get("alerts");
-    //   alerts.forEach(alert -> {
-    //   });
-    // });
   }
 }
