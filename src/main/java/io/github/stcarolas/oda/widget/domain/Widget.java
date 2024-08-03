@@ -22,7 +22,10 @@ public class Widget extends WidgetData {
 
   private List<Map<String, Object>> properties() {
     var config = getConfig();
-    List<Object> properties = (List) config.get("properties");
+    List<Object> properties = (List) config.getOrDefault(
+      "properties",
+      List.<Object>of()
+    );
     return properties.stream().map(it -> (Map<String, Object>) it).toList();
   }
 
@@ -69,7 +72,7 @@ public class Widget extends WidgetData {
     return withConfig(updatedConfig);
   }
 
-  private Widget withConfig(Map<String,  Object> config){
+  private Widget withConfig(Map<String, Object> config) {
     var result = new Widget();
     result.setId(getId());
     result.setName(getName());

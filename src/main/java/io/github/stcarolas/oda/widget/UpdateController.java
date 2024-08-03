@@ -109,16 +109,6 @@ public class UpdateController {
   @Secured(SecurityRule.IS_ANONYMOUS)
   public void runUpdate() {
     log.info("Running update");
-    log.info("Updating {}", DONATION_TIMER_TYPE);
-    widgetRepository.updateWidget(DONATION_TIMER_TYPE, timerMigration);
-    log.info("Updating {}", DONATERS_TOP_LIST_TYPE);
-    widgetRepository.updateWidget(DONATERS_TOP_LIST_TYPE, toplistMigration);
-    log.info("Updating {}", PLAYER_INFO_TYPE);
-    widgetRepository.updateWidget(PLAYER_INFO_TYPE, playerInfoMigration);
-    log.info("Updating {}", REEL_TYPE);
-    widgetRepository.updateWidget(REEL_TYPE, reelMigration);
-    log.info("Updating {}", DONATION_GOAL_TYPE);
-    widgetRepository.updateWidget(DONATION_GOAL_TYPE, goalMigration);
     log.info("Updating {}", PAYMENT_ALERTS_TYPE);
     widgetRepository.updateWidget(
       PAYMENT_ALERTS_TYPE,
@@ -138,25 +128,31 @@ public class UpdateController {
             .map(it -> {
               if ("headerFont".equals(it.get("name"))) {
                 var value = (Map<String,Object>)it.get("value");
-                var color = (String) value.getOrDefault("color",DEFAULT_COLOR);
-                var  updatedValue  = new HashMap<String,Object>();
-                updatedValue.putAll(value);
-                updatedValue.put("color",color(color));
-                var updated = new HashMap<String, Object>();
-                updated.putAll(it);
-                updated.put("value", updatedValue);
-                return updated;
+                try{
+                  var color = (String) value.getOrDefault("color",DEFAULT_COLOR);
+                  var  updatedValue  = new HashMap<String,Object>();
+                  updatedValue.putAll(value);
+                  updatedValue.put("color",color(color));
+                  var updated = new HashMap<String, Object>();
+                  updated.putAll(it);
+                  updated.put("value", updatedValue);
+                  return updated;
+                } catch(Exception e){
+                }
               }
               if ("font".equals(it.get("name"))) {
                 var value = (Map<String,Object>)it.get("value");
-                var color = (String) value.getOrDefault("color",DEFAULT_COLOR);
-                var  updatedValue  = new HashMap<String,Object>();
-                updatedValue.putAll(value);
-                updatedValue.put("color",color(color));
-                var updated = new HashMap<String, Object>();
-                updated.putAll(it);
-                updated.put("value", updatedValue);
-                return updated;
+                try{
+                  var color = (String) value.getOrDefault("color",DEFAULT_COLOR);
+                  var  updatedValue  = new HashMap<String,Object>();
+                  updatedValue.putAll(value);
+                  updatedValue.put("color",color(color));
+                  var updated = new HashMap<String, Object>();
+                  updated.putAll(it);
+                  updated.put("value", updatedValue);
+                  return updated;
+                } catch(Exception e){
+                }
               }
               return it;
             })
