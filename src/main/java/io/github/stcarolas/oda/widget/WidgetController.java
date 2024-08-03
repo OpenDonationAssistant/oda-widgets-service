@@ -1,5 +1,6 @@
 package io.github.stcarolas.oda.widget;
 
+import io.github.stcarolas.oda.widget.domain.Widget;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;

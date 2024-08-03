@@ -1,6 +1,5 @@
-package io.github.stcarolas.oda.widget;
+package io.github.stcarolas.oda.widget.domain;
 
-import java.util.List;
 import java.util.Map;
 
 import io.micronaut.data.annotation.Id;
@@ -11,7 +10,7 @@ import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable
 @MappedEntity("widget")
-public class Widget {
+public class WidgetData {
 
   @Id
   private String id;
@@ -29,7 +28,7 @@ public class Widget {
   private String ownerId;
 
   @MappedProperty(type = DataType.JSON)
-  private java.util.Map<String, Object> config;
+  private Map<String, Object> config;
 
   public String getId() {
     return id;
@@ -71,14 +70,11 @@ public class Widget {
     this.ownerId = ownerId;
   }
 
-  public java.util.Map<String, Object> getConfig() {
-    if (config == null || config.isEmpty()) {
-      return Map.of("properties", List.of());
-    }
+  public Map<String, Object> getConfig() {
     return config;
   }
 
-  public void setConfig(java.util.Map<String, Object> config) {
+  public void setConfig(Map<String, Object> config) {
     this.config = config;
   }
 
@@ -100,4 +96,5 @@ public class Widget {
       "}"
     );
   }
+
 }

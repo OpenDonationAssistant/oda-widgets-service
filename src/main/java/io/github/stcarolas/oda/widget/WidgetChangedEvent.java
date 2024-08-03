@@ -1,5 +1,6 @@
 package io.github.stcarolas.oda.widget;
 
+import io.github.stcarolas.oda.widget.domain.Widget;
 import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable
