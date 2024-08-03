@@ -138,6 +138,7 @@ public class UpdateController {
                   updated.put("value", updatedValue);
                   return updated;
                 } catch(Exception e){
+                  e.printStackTrace();
                 }
               }
               if ("font".equals(it.get("name"))) {
@@ -152,6 +153,7 @@ public class UpdateController {
                   updated.put("value", updatedValue);
                   return updated;
                 } catch(Exception e){
+                  e.printStackTrace();
                 }
               }
               return it;
