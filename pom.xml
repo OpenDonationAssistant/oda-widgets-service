@@ -5,14 +5,11 @@
   <artifactId>oda-widget-service</artifactId>
   <version>0.1</version>
   <packaging>${packaging}</packaging>
-  <!--#region parent-->
   <parent>
     <groupId>io.micronaut.platform</groupId>
     <artifactId>micronaut-parent</artifactId>
     <version>4.2.3</version>
   </parent>
-  <!--#endregion-->
-  <!--#region properties-->
   <properties>
     <packaging>jar</packaging>
     <jdk.version>17</jdk.version>
@@ -23,23 +20,18 @@
     <micronaut.aot.packageName>io.github.stcarolas.oda.aot.generated</micronaut.aot.packageName>
     <exec.mainClass>io.github.stcarolas.oda.Application</exec.mainClass>
   </properties>
-  <!--#endregion-->
-  <!--#region repositories-->
   <repositories>
     <repository>
       <id>central</id>
       <url>https://repo.maven.apache.org/maven2</url>
     </repository>
   </repositories>
-  <!--#endregion-->
-  <!--#region dependencies-->
   <dependencies>
     <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
       <version>1.0.0-alpha-4</version>
     </dependency>
-    <!-- #region http-server -->
     <dependency>
       <groupId>io.micronaut</groupId>
       <artifactId>micronaut-http-server-netty</artifactId>
@@ -57,15 +49,11 @@
       <artifactId>micronaut-serde-jackson</artifactId>
       <scope>compile</scope>
     </dependency>
-    <!-- #endregion -->
-    <!-- #region security -->
     <dependency>
       <groupId>io.micronaut.security</groupId>
       <artifactId>micronaut-security-jwt</artifactId>
       <scope>compile</scope>
     </dependency>
-    <!-- #endregion security -->
-    <!-- #region sql-->
     <dependency>
       <groupId>io.micronaut.flyway</groupId>
       <artifactId>micronaut-flyway</artifactId>
@@ -90,8 +78,6 @@
       <artifactId>micronaut-rabbitmq</artifactId>
       <scope>compile</scope>
     </dependency>
-    <!-- #endregion -->
-    <!-- #region test -->
     <dependency>
       <groupId>io.micronaut.test</groupId>
       <artifactId>micronaut-test-junit5</artifactId>
@@ -107,8 +93,6 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
-    <!-- #endregion test -->
-    <!-- #region tools -->
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
@@ -124,12 +108,8 @@
       <artifactId>micronaut-openapi-annotations</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!-- #endregion tools -->
   </dependencies>
-  <!--#endregion-->
-  <!-- #region build -->
   <build>
-    <!--#region plugins-->
     <plugins>
       <plugin>
         <groupId>io.micronaut.maven</groupId>
@@ -198,8 +178,27 @@
           </compilerArgs>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>7.2.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.basedir}/target/classes/META-INF/swagger/oda-widget-service-0.1.yml</inputSpec>
+              <generatorName>typescript-axios</generatorName>
+              <configurationFile>openapi-config.json</configurationFile>
+              <configOptions>
+                <output>${project.build.directory}/</output>
+              </configOptions>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
-    <!--#endregion-->
   </build>
-  <!--#endregion-->
 </project>
