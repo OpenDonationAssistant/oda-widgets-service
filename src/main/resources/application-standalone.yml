@@ -5,3 +5,6 @@ datasources:
     password: ${JDBC_PASSWORD:`postgres`}
     driverClassName: 'org.postgresql.Driver'
 rabbitmq.host: ${RABBITMQ_HOST:`localhost`}
+logger:
+  levels:
+    io.github.stcarolas: INFO
