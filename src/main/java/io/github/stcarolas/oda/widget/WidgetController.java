@@ -34,7 +34,7 @@ public class WidgetController {
 
   @Put
   @Secured(SecurityRule.IS_AUTHENTICATED)
-  public void add(@Body NewWidgetRequest request, Authentication auth) {
+  public Widget add(@Body NewWidgetRequest request, Authentication auth) {
     var widget = new Widget();
     widget.setType(request.getType());
     widget.setId(UUID.randomUUID().toString()); // todo change to uuidv7
@@ -55,6 +55,7 @@ public class WidgetController {
         new WidgetChangedEvent("created", widget)
       );
     }
+    return widget;
   }
 
   @Delete("{id}")
