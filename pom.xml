@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.stcarolas.oda</groupId>
   <artifactId>oda-widget-service</artifactId>
-  <version>0.2</version>
+  <version>0.3</version>
   <packaging>${packaging}</packaging>
   <parent>
     <groupId>io.micronaut.platform</groupId>
@@ -26,7 +26,22 @@
       <url>https://repo.maven.apache.org/maven2</url>
     </repository>
   </repositories>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.infinispan</groupId>
+        <artifactId>infinispan-bom</artifactId>
+        <version>14.0.24.Final</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
+    <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-client-hotrod</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.vavr</groupId>
       <artifactId>vavr</artifactId>
@@ -189,7 +204,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${project.basedir}/target/classes/META-INF/swagger/oda-widget-service-0.2.yml</inputSpec>
+              <inputSpec>${project.basedir}/target/classes/META-INF/swagger/oda-widget-service-0.3.yml</inputSpec>
               <generatorName>typescript-axios</generatorName>
               <configurationFile>openapi-config.json</configurationFile>
               <configOptions>

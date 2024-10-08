@@ -1,6 +1,7 @@
 package io.github.stcarolas.oda.widget;
 
 import io.github.stcarolas.oda.widget.domain.Widget;
+import io.micronaut.context.annotation.Value;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -10,9 +11,11 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Patch;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
@@ -108,9 +111,9 @@ public class WidgetController {
       .orElseGet(() -> HttpResponse.notFound());
   }
 
-  @Secured(SecurityRule.IS_AUTHENTICATED)
+  @Secured(SecurityRule.IS_ANONYMOUS)
   @Get
-  public java.util.List<Widget> list(Authentication auth) {
+  public java.util.List<Widget> list(@Nullable Authentication auth) {
     return widgetRepository.find(getOwnerId(auth));
   }
 

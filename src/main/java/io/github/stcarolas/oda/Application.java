@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.info.License;
 @OpenAPIDefinition(
   info = @Info(
     title = "ODA Widget Service",
-    version = "0.2",
+    version = "0.3",
     description = "ODA Widget Service",
     license = @License(
       name = "GPL-3.0",
