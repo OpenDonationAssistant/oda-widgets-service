@@ -23,7 +23,7 @@ public interface WidgetRepository extends CrudRepository<Widget, String> {
     findAll()
       .stream()
       .filter(widget -> type.equals(widget.getType()))
-      .filter(widget -> !widget.hasNoProperties())
+      // .filter(widget -> !widget.hasNoProperties())
       .map(updateFn)
       .forEach(this::update);
   }
