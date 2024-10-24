@@ -52,9 +52,13 @@ public class UpdateController {
         var alerts = (List<Map<String, Object>>) widget
           .getConfig()
           .get("alerts");
+        if (alerts == null){
+          return widget;
+        }
         final List<Map<String, Object>> updatedAlerts = alerts
           .stream()
           .map(alert -> {
+            log.debug("Updating alert: {}", alert);
             var amount =
               ((Map<String, Object>) alert.get("trigger")).get("amount");
             var trigger = new HashMap<String, Object>();
