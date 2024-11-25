@@ -1,14 +1,17 @@
 package io.github.stcarolas.oda;
 
+import io.github.opendonationassistant.rabbit.RabbitConfiguration;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.ApplicationContextConfigurer;
 import io.micronaut.context.annotation.ContextConfigurer;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.rabbitmq.connect.ChannelInitializer;
 import io.micronaut.runtime.Micronaut;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
+import jakarta.inject.Singleton;
 
 @OpenAPIDefinition(
   info = @Info(
@@ -35,5 +38,10 @@ public class Application {
     public void configure(@NonNull ApplicationContextBuilder builder) {
       builder.defaultEnvironments("allinone");
     }
+  }
+
+  @Singleton
+  public ChannelInitializer rabbitConfiguration() {
+    return new RabbitConfiguration();
   }
 }

@@ -1,8 +1,5 @@
 package io.github.stcarolas.oda.widget;
 
-import static io.github.stcarolas.oda.widget.Utils.*;
-
-import io.github.stcarolas.oda.widget.domain.Widget;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
@@ -13,10 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
