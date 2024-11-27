@@ -1,7 +1,6 @@
 package io.github.stcarolas.oda.widget;
 
 import io.github.stcarolas.oda.widget.domain.Widget;
-import io.micronaut.context.annotation.Value;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -11,12 +10,12 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Patch;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Put;
-import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,11 +45,7 @@ public class WidgetController {
     widget.setSortOrder(
       request.getSortOrder() != null ? request.getSortOrder() : 0
     );
-    if (request.getType() != null) {
-      widget.setConfig(
-        Default.configs.getOrElse(request.getType(), new Widget()).getConfig()
-      );
-    }
+    widget.setConfig(new HashMap<String, Object>());
     widgetRepository.save(widget);
     if (request.getType() != null) {
       notificationSender.send(

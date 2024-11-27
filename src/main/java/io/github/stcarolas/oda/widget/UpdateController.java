@@ -5,7 +5,6 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +45,7 @@ public class UpdateController {
         var alerts = (List<Map<String, Object>>) widget
           .getConfig()
           .get("alerts");
-        if (alerts == null){
+        if (alerts == null) {
           return widget;
         }
         final List<Map<String, Object>> updatedAlerts = alerts
@@ -73,14 +72,18 @@ public class UpdateController {
         var properties = (List<Map<String, Object>>) widget
           .getConfig()
           .get("properties");
-        var updatedProperties = new ArrayList<Map<String,Object>>();
+        var updatedProperties = new ArrayList<Map<String, Object>>();
         if (properties != null) {
           updatedProperties.addAll(properties);
         }
         updatedProperties.add(property);
         log.info("Updated properties: {}", updatedProperties);
         widget.setConfig(Map.of("properties", updatedProperties));
-        log.info("trying to save widget: {}, owner: {}", widget.getId(), widget.getOwnerId());
+        log.info(
+          "trying to save widget: {}, owner: {}",
+          widget.getId(),
+          widget.getOwnerId()
+        );
         return widget;
       }
     );

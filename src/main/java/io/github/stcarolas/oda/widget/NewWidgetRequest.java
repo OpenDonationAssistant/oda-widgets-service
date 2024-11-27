@@ -4,6 +4,7 @@ import io.micronaut.serde.annotation.Serdeable;
 
 @Serdeable
 public class NewWidgetRequest {
+
   private String type;
   private Integer sortOrder;
 
@@ -22,5 +23,4 @@ public class NewWidgetRequest {
   public void setSortOrder(Integer sortOrder) {
     this.sortOrder = sortOrder;
   }
-  
 }
