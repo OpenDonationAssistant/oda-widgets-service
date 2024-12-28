@@ -22,7 +22,9 @@ public class TemplateController {
 
   @Get
   @Secured(SecurityRule.IS_ANONYMOUS)
-  public List<TemplateDto> list(@QueryValue("widget") String widgetType) {
+  public List<TemplateDto> listTemplates(
+    @QueryValue("widget") String widgetType
+  ) {
     return repository
       .listSystem(widgetType)
       .stream()

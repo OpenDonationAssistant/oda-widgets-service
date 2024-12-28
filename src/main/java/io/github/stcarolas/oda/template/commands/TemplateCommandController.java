@@ -20,7 +20,7 @@ public class TemplateCommandController {
 
   @Post("create")
   @Secured(SecurityRule.IS_ANONYMOUS)
-  public void create(@Body CreateTemplate command) {
+  public void createTemplate(@Body CreateTemplate command) {
     command.execute(repository);
   }
 }
