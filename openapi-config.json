@@ -1,6 +1,6 @@
 {
   "npmName": "@opendonationassistant/oda-widget-service-client",
-  "npmVersion": "0.5",
+  "npmVersion": "0.5.0",
   "npmRepository" : "https://npm.pkg.github.com",
   "snapshot" : false,
   "supportsES6": true
