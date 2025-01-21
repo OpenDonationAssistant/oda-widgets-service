@@ -1,5 +1,6 @@
 package io.github.stcarolas.oda.widget;
 
+import io.github.stcarolas.oda.widget.commands.ReorderCommand;
 import io.github.stcarolas.oda.widget.domain.Widget;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpResponse;
@@ -9,6 +10,7 @@ import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Patch;
 import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
@@ -32,6 +34,13 @@ public class WidgetController {
   ) {
     this.widgetRepository = repository;
     this.notificationSender = notificationSender;
+  }
+
+
+  @Post("commands/reorder")
+  @Secured(SecurityRule.IS_AUTHENTICATED)
+  public void reorder(Authentication auth, @Body ReorderCommand command){
+    command.execute(getOwnerId(auth), widgetRepository);
   }
 
   @Put

@@ -4,11 +4,13 @@ import io.github.stcarolas.oda.widget.domain.Widget;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.CrudRepository;
+
+import java.util.List;
 import java.util.function.Function;
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
 public interface WidgetRepository extends CrudRepository<Widget, String> {
-  abstract java.util.List<Widget> find(String ownerId);
+  abstract List<Widget> find(String ownerId);
 
   abstract java.util.Optional<Widget> find(String ownerId, String id);
 
@@ -19,7 +21,10 @@ public interface WidgetRepository extends CrudRepository<Widget, String> {
   public static final String REEL_TYPE = "reel";
   public static final String DONATERS_TOP_LIST_TYPE = "donaters-top-list";
 
-  default public void updateWidget(String type, Function<Widget, Widget> updateFn) {
+  default public void updateWidget(
+      String type,
+      Function<Widget, Widget> updateFn
+  ) {
     findAll()
       .stream()
       .filter(widget -> type.equals(widget.getType()))
