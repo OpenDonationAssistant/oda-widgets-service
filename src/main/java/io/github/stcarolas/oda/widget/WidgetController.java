@@ -17,6 +17,8 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,6 +41,7 @@ public class WidgetController {
 
   @Post("commands/reorder")
   @Secured(SecurityRule.IS_AUTHENTICATED)
+  @Transactional
   public void reorder(Authentication auth, @Body ReorderCommand command){
     command.execute(getOwnerId(auth), widgetRepository);
   }

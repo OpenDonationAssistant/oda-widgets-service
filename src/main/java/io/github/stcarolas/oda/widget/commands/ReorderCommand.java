@@ -23,12 +23,12 @@ public class ReorderCommand {
     var widgets = repository.find(ownerId);
     var updatedWidgets = widgets.stream().map(it -> {
       var order = ids.indexOf(it.getId());
-      log.debug("id: {}, order: {}", it.getId(), order);
+      log.info("id: {}, order: {}", it.getId(), order);
       // TODO: immutable
       it.setSortOrder(order > 0 ? order : widgets.size());
       return it;
     }).toList();
-    log.debug("updated widgets: {}", updatedWidgets.stream().map(it -> it.getId()).toList());
+    log.info("updated widgets: {}", updatedWidgets.stream().map(it -> it.getId()).toList());
     repository.updateAll(updatedWidgets);
   }
 
