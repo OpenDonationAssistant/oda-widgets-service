@@ -26,10 +26,9 @@ public class ReorderCommand {
       log.info("id: {}, order: {}", it.getId(), order);
       // TODO: immutable
       it.setSortOrder(order > 0 ? order : widgets.size());
+      repository.update(it);
       return it;
     }).toList();
-    log.info("updated widgets: {}", updatedWidgets.stream().map(it -> it.getId()).toList());
-    repository.updateAll(updatedWidgets);
   }
 
 }
