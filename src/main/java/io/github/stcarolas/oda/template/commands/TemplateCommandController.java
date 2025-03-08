@@ -8,7 +8,7 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
-@Controller("/commands/templates")
+@Controller
 public class TemplateCommandController {
 
   private TemplateRepository repository;
@@ -18,7 +18,7 @@ public class TemplateCommandController {
     this.repository = repository;
   }
 
-  @Post("create")
+  @Post("/templates/commands/create")
   @Secured(SecurityRule.IS_ANONYMOUS)
   public void createTemplate(@Body CreateTemplate command) {
     command.execute(repository);
