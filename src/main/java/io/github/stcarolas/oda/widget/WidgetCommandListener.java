@@ -34,7 +34,7 @@ public class WidgetCommandListener {
     @NonNull
     final Optional<Widget> widget = repository.findById(command.getId());
     if (widget.isEmpty()) {
-      log.info("Widget not found: {}", command.getId());
+      log.warn("Widget not found: {}", command.getId());
     }
     widget.ifPresent(it -> {
       command
