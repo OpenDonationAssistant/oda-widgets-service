@@ -40,18 +40,33 @@ public class WidgetController {
   @Post("commands/reorder")
   @Secured(SecurityRule.IS_AUTHENTICATED)
   @Transactional
-  public void reorder(Authentication auth, @Body ReorderCommand command) {
-    command.execute(getOwnerId(auth), widgetRepository);
+  public HttpResponse<Void> reorder(
+    Authentication auth,
+    @Body ReorderCommand command
+  ) {
+    final Optional<String> ownerId = getOwnerId(auth);
+    if (ownerId.isEmpty()) {
+      return HttpResponse.unauthorized();
+    }
+    command.execute(ownerId.get(), widgetRepository);
+    return HttpResponse.ok();
   }
 
   @Put
   @Secured(SecurityRule.IS_AUTHENTICATED)
-  public Widget add(@Body NewWidgetRequest request, Authentication auth) {
+  public HttpResponse<Widget> add(
+    @Body NewWidgetRequest request,
+    Authentication auth
+  ) {
+    final Optional<String> ownerId = getOwnerId(auth);
+    if (ownerId.isEmpty()) {
+      return HttpResponse.unauthorized();
+    }
     var widget = new Widget();
     widget.setType(request.getType());
     widget.setId(UUID.randomUUID().toString()); // todo change to uuidv7
     widget.setName(request.getType());
-    widget.setOwnerId(getOwnerId(auth));
+    widget.setOwnerId(ownerId.get());
     widget.setSortOrder(
       request.getSortOrder() != null ? request.getSortOrder() : 0
     );
@@ -63,13 +78,20 @@ public class WidgetController {
         new WidgetChangedEvent("created", widget)
       );
     }
-    return widget;
+    return HttpResponse.ok(widget);
   }
 
   @Delete("{id}")
   @Secured(SecurityRule.IS_AUTHENTICATED)
-  public void delete(@PathVariable("id") String id, Authentication auth) {
-    Optional<Widget> widget = widgetRepository.find(getOwnerId(auth), id);
+  public HttpResponse<Void> delete(
+    @PathVariable("id") String id,
+    Authentication auth
+  ) {
+    final Optional<String> ownerId = getOwnerId(auth);
+    if (ownerId.isEmpty()) {
+      return HttpResponse.unauthorized();
+    }
+    Optional<Widget> widget = widgetRepository.find(ownerId.get(), id);
     widgetRepository.deleteById(id);
     widget.ifPresent(it -> {
       notificationSender.send(
@@ -77,6 +99,7 @@ public class WidgetController {
         new WidgetChangedEvent("deleted", it)
       );
     });
+    return HttpResponse.ok();
   }
 
   @Patch("{id}")
@@ -86,8 +109,12 @@ public class WidgetController {
     @Body UpdateWidgetRequest request,
     Authentication auth
   ) {
+    final Optional<String> ownerId = getOwnerId(auth);
+    if (ownerId.isEmpty()){
+      return HttpResponse.unauthorized();
+    }
     @NonNull
-    Optional<Widget> widget = widgetRepository.find(getOwnerId(auth), id);
+    Optional<Widget> widget = widgetRepository.find(ownerId.get(), id);
     return widget
       .map(it -> {
         var updated = new Widget();
@@ -118,8 +145,12 @@ public class WidgetController {
 
   @Secured(SecurityRule.IS_ANONYMOUS)
   @Get
-  public java.util.List<Widget> list(@Nullable Authentication auth) {
-    return widgetRepository.find(getOwnerId(auth));
+  public HttpResponse<java.util.List<Widget>> list(@Nullable Authentication auth) {
+    final Optional<String> ownerId = getOwnerId(auth);
+    if (ownerId.isEmpty()){
+      return HttpResponse.unauthorized();
+    }
+    return HttpResponse.ok(widgetRepository.find(ownerId.get()));
   }
 
   @Get("{id}")
@@ -128,15 +159,20 @@ public class WidgetController {
     @PathVariable("id") String id,
     Authentication auth
   ) {
+    final Optional<String> ownerId = getOwnerId(auth);
+    if (ownerId.isEmpty()) {
+      return HttpResponse.unauthorized();
+    }
     return widgetRepository
-      .find(getOwnerId(auth), id)
+      .find(ownerId.get(), id)
       .map(HttpResponse::ok)
       .orElseGet(() -> HttpResponse.notFound());
   }
 
-  private String getOwnerId(Authentication auth) {
-    return String.valueOf(
-      auth.getAttributes().getOrDefault("preferred_username", "")
-    );
+  private Optional<String> getOwnerId(Authentication auth) {
+    return Optional.ofNullable(auth)
+      .map(it -> it.getAttributes())
+      .map(it -> it.getOrDefault("preferred_username", ""))
+      .map(String::valueOf);
   }
 }

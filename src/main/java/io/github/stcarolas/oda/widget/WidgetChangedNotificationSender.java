@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 
 @RabbitClient(Exchange.Configs.WIDGETS)
 public interface WidgetChangedNotificationSender {
+
   static Logger log = LoggerFactory.getLogger(
     WidgetChangedNotificationSender.class
   );
+
   void _send(@Binding String binding, WidgetChangedEvent event);
 
   public default void send(String binding, WidgetChangedEvent event) {
