@@ -18,9 +18,7 @@ public class WidgetAdminController {
   @Secured(SecurityRule.IS_ANONYMOUS)
   public HttpResponse<Widget> get(@PathVariable("id") String id) {
     return widgetRepository
-      .find(id)
-      .stream()
-      .findFirst()
+      .findById(id)
       .map(HttpResponse::ok)
       .orElseGet(() -> HttpResponse.notFound());
   }
