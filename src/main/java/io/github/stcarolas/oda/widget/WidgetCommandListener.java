@@ -19,13 +19,16 @@ public class WidgetCommandListener {
   private Logger log = LoggerFactory.getLogger(WidgetCommandListener.class);
   private final WidgetRepository repository;
   private final CommandSender commandSender;
+  private final WidgetChangedNotificationSender changesSender;
 
   public WidgetCommandListener(
     WidgetRepository repository,
-    CommandSender commandSender
+    CommandSender commandSender,
+    WidgetChangedNotificationSender changesSender
   ) {
     this.repository = repository;
     this.commandSender = commandSender;
+    this.changesSender = changesSender;
   }
 
   @Queue(WIDGETS)
@@ -46,7 +49,12 @@ public class WidgetCommandListener {
           var updated = it.updateProperty(prop.getName(), prop.getValue());
           repository.update(updated); // TODO batch
         });
+      changesSender.send(
+        it.getType(),
+        new WidgetChangedEvent("updated", repository.findById(it.getId()).get())
+      );
     });
+
     var notifyCommand = new Command(command.getId(), "reload");
     commandSender.send(notifyCommand);
   }
