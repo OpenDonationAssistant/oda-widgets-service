@@ -16,11 +16,11 @@ public class WidgetAdminController {
 
   @Get("/admin/widgets/{id}")
   @Secured(SecurityRule.IS_ANONYMOUS)
-  public HttpResponse<Widget> get(
-    @PathVariable("id") String id,
-  ) {
+  public HttpResponse<Widget> get(@PathVariable("id") String id) {
     return widgetRepository
       .find(id)
+      .stream()
+      .findFirst()
       .map(HttpResponse::ok)
       .orElseGet(() -> HttpResponse.notFound());
   }
