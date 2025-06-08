@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>io.github.stcarolas.oda</groupId>
+  <groupId>io.github.opendonationassistant</groupId>
   <artifactId>oda-widget-service</artifactId>
   <version>0.5</version>
   <packaging>${packaging}</packaging>
@@ -17,8 +17,8 @@
     <micronaut.version>4.2.3</micronaut.version>
     <micronaut.runtime>netty</micronaut.runtime>
     <micronaut.aot.enabled>false</micronaut.aot.enabled>
-    <micronaut.aot.packageName>io.github.stcarolas.oda.aot.generated</micronaut.aot.packageName>
-    <exec.mainClass>io.github.stcarolas.oda.Application</exec.mainClass>
+    <micronaut.aot.packageName>io.github.opendonationassistant.aot.generated</micronaut.aot.packageName>
+    <exec.mainClass>io.github.opendonationassistant.Application</exec.mainClass>
   </properties>
   <repositories>
     <repository>
@@ -189,7 +189,7 @@
             </path>
           </annotationProcessorPaths>
           <compilerArgs>
-            <arg>-Amicronaut.processing.group=io.github.stcarolas.oda</arg>
+            <arg>-Amicronaut.processing.group=io.github.opendonationassistant</arg>
             <arg>-Amicronaut.processing.module=oda-widget-service</arg>
           </compilerArgs>
         </configuration>
