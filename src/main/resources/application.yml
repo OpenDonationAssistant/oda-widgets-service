@@ -24,5 +24,5 @@ flyway:
 jpa:
   default:
     entity-scan:
-        packages: 'io.github.stcarolas.oda.widget'
+        packages: 'io.github.opendonationassistant.widget'
 infinispan.url: ${INFINISPAN_HOST:`127.0.0.1`}
