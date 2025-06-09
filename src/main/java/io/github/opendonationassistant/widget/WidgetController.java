@@ -17,6 +17,8 @@ import io.micronaut.http.annotation.Patch;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
@@ -44,7 +46,7 @@ public class WidgetController extends BaseController {
 
   @Post("commands/reorder")
   @Secured(SecurityRule.IS_AUTHENTICATED)
-  @Transactional
+  @ExecuteOn(TaskExecutors.BLOCKING)
   public HttpResponse<Void> reorder(
     Authentication auth,
     @Body ReorderCommand command
@@ -59,6 +61,7 @@ public class WidgetController extends BaseController {
 
   @Delete("{id}")
   @Secured(SecurityRule.IS_AUTHENTICATED)
+  @ExecuteOn(TaskExecutors.BLOCKING)
   public HttpResponse<Void> delete(
     @PathVariable("id") String id,
     Authentication auth
@@ -80,6 +83,7 @@ public class WidgetController extends BaseController {
 
   @Patch("{id}")
   @Secured(SecurityRule.IS_AUTHENTICATED)
+  @ExecuteOn(TaskExecutors.BLOCKING)
   public HttpResponse<Widget> update(
     @PathVariable("id") String id,
     @Body UpdateWidgetRequest request,
