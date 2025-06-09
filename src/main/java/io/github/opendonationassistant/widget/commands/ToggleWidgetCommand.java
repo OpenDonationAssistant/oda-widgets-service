@@ -29,7 +29,7 @@ public class ToggleWidgetCommand extends BaseController {
     this.notificationSender = notificationSender;
   }
 
-  @Post
+  @Post("/widgets/commands/toggle")
   @Secured(SecurityRule.IS_AUTHENTICATED)
   @ExecuteOn(TaskExecutors.BLOCKING)
   public HttpResponse<Widget> toggleWidget(
