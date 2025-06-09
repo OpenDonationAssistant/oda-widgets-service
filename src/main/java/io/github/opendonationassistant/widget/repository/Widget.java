@@ -80,6 +80,7 @@ public class Widget extends WidgetData {
     result.setType(getType());
     result.setOwnerId(getOwnerId());
     result.setSortOrder(getSortOrder());
+    result.setEnabled(getEnabled());
     result.setConfig(config);
     return result;
   }

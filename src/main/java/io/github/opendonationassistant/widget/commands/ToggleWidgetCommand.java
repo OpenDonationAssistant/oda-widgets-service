@@ -1,7 +1,6 @@
 package io.github.opendonationassistant.widget.commands;
 
 import io.github.opendonationassistant.commons.micronaut.BaseController;
-import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.repository.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
@@ -15,17 +14,14 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.serde.annotation.Serdeable;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
 
 @Controller
-public class AddWidgetCommand extends BaseController {
+public class ToggleWidgetCommand extends BaseController {
 
   private final WidgetRepository repository;
   private final WidgetChangedNotificationSender notificationSender;
 
-  public AddWidgetCommand(
+  public ToggleWidgetCommand(
     WidgetRepository repository,
     WidgetChangedNotificationSender notificationSender
   ) {
@@ -33,43 +29,28 @@ public class AddWidgetCommand extends BaseController {
     this.notificationSender = notificationSender;
   }
 
-  @Post("/widgets/commands/add")
+  @Post
   @Secured(SecurityRule.IS_AUTHENTICATED)
   @ExecuteOn(TaskExecutors.BLOCKING)
-  public HttpResponse<Widget> addWidget(
+  public HttpResponse<Widget> toggleWidget(
     Authentication auth,
-    @Body NewWidgetRequest request
+    @Body ToogleWidgetRequest request
   ) {
     var ownerId = getOwnerId(auth);
     if (ownerId.isEmpty()) {
       return HttpResponse.unauthorized();
     }
-    var widget = new Widget();
-    widget.setType(request.type());
-    widget.setId(UUID.randomUUID().toString()); // todo change to uuidv7
-    widget.setName(
-      Optional.ofNullable(request.name()).orElseGet(() -> request.type())
-    );
-    widget.setOwnerId(ownerId.get());
-    widget.setSortOrder(request.sortOrder() != null ? request.sortOrder() : 0);
-    widget.setConfig(new HashMap<String, Object>());
-    widget.setEnabled(true);
-    repository.save(widget);
-
-    if (request.type() != null) {
-      notificationSender.send(
-        request.type(),
-        new WidgetChangedEvent("created", widget.asDto())
-      );
-    }
-
-    return HttpResponse.ok(widget);
+    return repository
+      .find(ownerId.get(), request.id())
+      .map(widget -> {
+        widget.setEnabled(!widget.getEnabled());
+        repository.update(widget);
+        return widget;
+      })
+      .map(HttpResponse::ok)
+      .orElse(HttpResponse.notFound());
   }
 
   @Serdeable
-  public static record NewWidgetRequest(
-    String type,
-    Integer sortOrder,
-    String name
-  ) {}
+  public static record ToogleWidgetRequest(String id) {}
 }
