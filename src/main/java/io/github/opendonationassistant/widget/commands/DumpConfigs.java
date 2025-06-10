@@ -12,6 +12,8 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.serde.annotation.Serdeable;
+
+import java.util.Map;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +42,7 @@ public class DumpConfigs {
       widgets.filter(widget -> widget.getType().equals(request.widgetType()));
     }
     widgets.forEach(widget -> {
-      log.info("Dumping widget", Map.of("id", widget.getId());
+      log.info("Dumping widget", Map.of("id", widget.getId()));
       notificationSender.send(
         widget.getType(),
         new WidgetChangedEvent("updated", widget.asDto())
