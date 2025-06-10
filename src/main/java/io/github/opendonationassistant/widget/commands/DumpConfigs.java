@@ -1,5 +1,6 @@
 package io.github.opendonationassistant.widget.commands;
 
+import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.repository.Widget;
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
 @Controller
 public class DumpConfigs {
 
-  private Logger log = LoggerFactory.getLogger(DumpConfigs.class);
+  private ODALogger log = new ODALogger(this);
 
   private final WidgetRepository repository;
   private final WidgetChangedNotificationSender notificationSender;
@@ -39,7 +40,7 @@ public class DumpConfigs {
       widgets.filter(widget -> widget.getType().equals(request.widgetType()));
     }
     widgets.forEach(widget -> {
-      log.info("dumping {}", widget.getId());
+      log.info("Dumping widget", Map.of("id", widget.getId());
       notificationSender.send(
         widget.getType(),
         new WidgetChangedEvent("updated", widget.asDto())

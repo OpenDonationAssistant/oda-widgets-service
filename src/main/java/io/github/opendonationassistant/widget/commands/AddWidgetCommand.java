@@ -1,5 +1,6 @@
 package io.github.opendonationassistant.widget.commands;
 
+import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
@@ -16,12 +17,14 @@ import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.serde.annotation.Serdeable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @Controller
 public class AddWidgetCommand extends BaseController {
 
+  private final ODALogger log = new ODALogger(this);
   private final WidgetRepository repository;
   private final WidgetChangedNotificationSender notificationSender;
 
@@ -54,6 +57,7 @@ public class AddWidgetCommand extends BaseController {
     widget.setSortOrder(request.sortOrder() != null ? request.sortOrder() : 0);
     widget.setConfig(new HashMap<String, Object>());
     widget.setEnabled(true);
+    log.info("Adding widget", Map.of("widget", widget));
     repository.save(widget);
 
     if (request.type() != null) {

@@ -26,6 +26,7 @@ import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -125,7 +126,7 @@ public class WidgetController extends BaseController {
 
   @Secured(SecurityRule.IS_ANONYMOUS)
   @Get
-  public HttpResponse<java.util.List<Widget>> list(
+  public HttpResponse<List<Widget>> list(
     @Nullable Authentication auth
   ) {
     final Optional<String> ownerId = getOwnerId(auth);
