@@ -101,7 +101,7 @@ public class Widget extends WidgetData {
               (String) property.get("name"),
               (String) property.get("displayName"),
               (String) property.get("type"),
-              (String) property.get("value")
+              (Object) property.get("value")
             );
           })
           .toList()
