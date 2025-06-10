@@ -3,7 +3,6 @@ package io.github.opendonationassistant.widget.repository;
 import io.github.opendonationassistant.events.widget.WidgetProperty;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.serde.annotation.Serdeable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +90,7 @@ public class Widget extends WidgetData {
       getType(),
       getSortOrder(),
       getName(),
+      getEnabled(),
       getOwnerId(),
       new io.github.opendonationassistant.events.widget.WidgetConfig(
         ((List<Object>) getConfig()

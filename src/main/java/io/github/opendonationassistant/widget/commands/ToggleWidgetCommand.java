@@ -1,6 +1,7 @@
 package io.github.opendonationassistant.widget.commands;
 
 import io.github.opendonationassistant.commons.micronaut.BaseController;
+import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.repository.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
@@ -45,6 +46,10 @@ public class ToggleWidgetCommand extends BaseController {
       .map(widget -> {
         widget.setEnabled(!widget.getEnabled());
         repository.update(widget);
+        notificationSender.send(
+          widget.getType(),
+          new WidgetChangedEvent("toggled", widget.asDto())
+        );
         return widget;
       })
       .map(HttpResponse::ok)
