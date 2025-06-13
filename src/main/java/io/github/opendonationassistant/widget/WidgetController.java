@@ -113,6 +113,7 @@ public class WidgetController extends BaseController {
         updated.setConfig(
           request.getConfig() != null ? request.getConfig() : it.getConfig()
         );
+        updated.setEnabled(it.getEnabled());
         widgetRepository.update(updated);
         notificationSender.send(
           it.getType(),
@@ -126,9 +127,7 @@ public class WidgetController extends BaseController {
 
   @Secured(SecurityRule.IS_ANONYMOUS)
   @Get
-  public HttpResponse<List<Widget>> list(
-    @Nullable Authentication auth
-  ) {
+  public HttpResponse<List<Widget>> list(@Nullable Authentication auth) {
     final Optional<String> ownerId = getOwnerId(auth);
     if (ownerId.isEmpty()) {
       return HttpResponse.unauthorized();
