@@ -55,7 +55,7 @@ public class WidgetCommandListener {
           repository.update(updated); // TODO batch and separate
           changesSender.send(
             it.getType(),
-            new WidgetChangedEvent("updated", it.asDto())
+            new WidgetChangedEvent("updated", updated.asDto())
           );
         });
     });
