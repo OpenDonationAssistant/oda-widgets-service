@@ -52,12 +52,12 @@ public class WidgetCommandListener {
             Map.of("property", prop, "oldValue", it.getProperty(prop.name()))
           );
           var updated = it.updateProperty(prop.name(), prop.value());
-          repository.update(updated); // TODO batch
+          repository.update(updated); // TODO batch and separate
+          changesSender.send(
+            it.getType(),
+            new WidgetChangedEvent("updated", it.asDto())
+          );
         });
-      changesSender.send(
-        it.getType(),
-        new WidgetChangedEvent("updated", it.asDto())
-      );
     });
 
     var notifyCommand = new Command(command.id(), "reload");
