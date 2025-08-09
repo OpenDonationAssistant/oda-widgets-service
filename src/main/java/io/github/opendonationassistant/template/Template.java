@@ -20,10 +20,10 @@ public class Template {
 
   public TemplateDto asDto() {
     return new TemplateDto(
-      data.getId(),
-      data.getShowcase(),
-      data.getProperties(),
-      data.getOwnerId()
+      data.id(),
+      data.showcase(),
+      data.properties(),
+      data.ownerId()
     );
   }
 }
