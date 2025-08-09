@@ -22,7 +22,8 @@ public class Template {
     return new TemplateDto(
       data.getId(),
       data.getShowcase(),
-      data.getProperties()
+      data.getProperties(),
+      data.getOwnerId()
     );
   }
 }
