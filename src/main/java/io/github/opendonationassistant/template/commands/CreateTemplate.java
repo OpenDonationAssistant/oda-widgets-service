@@ -1,6 +1,7 @@
 package io.github.opendonationassistant.template.commands;
 
 import io.github.opendonationassistant.template.repository.TemplateRepository;
+import io.micronaut.security.authentication.Authentication;
 import io.micronaut.serde.annotation.Serdeable;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class CreateTemplate {
     this.properties = properties;
   }
 
-  public void execute(TemplateRepository repository) {
-    repository.create(widgetType, showcase, properties);
+  public void execute(String recipientId, TemplateRepository repository) {
+    repository.create(recipientId, widgetType, showcase, properties);
   }
 }
