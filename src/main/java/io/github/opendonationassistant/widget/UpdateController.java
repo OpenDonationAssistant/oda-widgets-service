@@ -1,5 +1,6 @@
 package io.github.opendonationassistant.widget;
 
+import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
@@ -18,16 +19,10 @@ import org.slf4j.LoggerFactory;
 public class UpdateController {
 
   private final WidgetRepository widgetRepository;
-  private final Logger log = LoggerFactory.getLogger(UpdateController.class);
+  private final ODALogger log = new ODALogger(this);
 
   public static final String DEFAULT_COLOR = "#684aff";
   public static final String DEFAULT_BACKGROUND_COLOR = "rgba(0,0,0,0)";
-  public static final String PAYMENT_ALERTS_TYPE = "payment-alerts";
-  public static final String PLAYER_INFO_TYPE = "player-info";
-  public static final String DONATION_TIMER_TYPE = "donation-timer";
-  public static final String DONATION_GOAL_TYPE = "donationgoal";
-  public static final String REEL_TYPE = "reel";
-  public static final String DONATERS_TOP_LIST_TYPE = "donaters-top-list";
 
   @Inject
   public UpdateController(WidgetRepository repository) {
@@ -37,12 +32,11 @@ public class UpdateController {
   @Post
   @Secured(SecurityRule.IS_ANONYMOUS)
   public void runUpdate() {
-    log.info("Running update");
-    log.info("Updating {}", PAYMENT_ALERTS_TYPE);
+    log.info("Running update", Map.of("type", WidgetRepository.PAYMENT_ALERTS_TYPE));
     widgetRepository.updateWidget(
-      PAYMENT_ALERTS_TYPE,
+      WidgetRepository.PAYMENT_ALERTS_TYPE,
       widget -> {
-        log.info("Updating widget: {}", widget);
+        log.info("Updating widget: {}", Map.of("widget", widget);
         var alerts = (List<Map<String, Object>>) widget
           .getConfig()
           .get("alerts");
@@ -78,16 +72,16 @@ public class UpdateController {
           updatedProperties.addAll(properties);
         }
         updatedProperties.add(property);
-        log.info("Updated properties: {}", updatedProperties);
+        log.info("Updated properties", Map.of("updatedProperties", updatedProperties));
         widget.setConfig(Map.of("properties", updatedProperties));
         log.info(
-          "trying to save widget: {}, owner: {}",
-          widget.getId(),
-          widget.getOwnerId()
+          "Trying to save",
+          Map.of("id", widget.getId(),
+          "ownerId", widget.getOwnerId())
         );
         return widget;
       }
     );
-    log.info("Update finished");
+    log.info("Update finished", Map.of());
   }
 }
