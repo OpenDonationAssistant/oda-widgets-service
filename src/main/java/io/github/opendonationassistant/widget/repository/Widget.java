@@ -130,9 +130,7 @@ public class Widget {
               Optional.ofNullable((String) property.get("displayName")).orElse(
                 ""
               ),
-              Optional.ofNullable((String) property.get("type")).orElseThrow(
-                () -> new RuntimeException("Missing property type")
-              ),
+              Optional.ofNullable((String) property.get("type")).orElse(""),
               Optional.ofNullable((Object) property.get("value")).orElseThrow(
                 () -> new RuntimeException("Missing property value")
               )
