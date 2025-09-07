@@ -30,7 +30,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.jspecify.annotations.NullUnmarked;
+
 @Controller("/widgets")
+@NullUnmarked
 public class WidgetController extends BaseController {
 
   private final WidgetRepository widgetRepository;
@@ -71,14 +74,9 @@ public class WidgetController extends BaseController {
     if (ownerId.isEmpty()) {
       return HttpResponse.unauthorized();
     }
-    Optional<Widget> widget = widgetRepository.find(ownerId.get(), id);
-    widgetRepository.deleteById(id);
-    widget.ifPresent(it -> {
-      notificationSender.send(
-        it.getType(),
-        new WidgetChangedEvent("deleted", it.asDto())
-      );
-    });
+    widgetRepository
+      .findByOwnerIdAndId(ownerId.get(), id)
+      .ifPresent(Widget::delete);
     return HttpResponse.ok();
   }
 
@@ -95,44 +93,33 @@ public class WidgetController extends BaseController {
       return HttpResponse.unauthorized();
     }
     @NonNull
-    Optional<Widget> widget = widgetRepository.find(ownerId.get(), id);
+    Optional<Widget> widget = widgetRepository.findByOwnerIdAndId(
+      ownerId.get(),
+      id
+    );
     return widget
-      .map(it -> {
-        var updated = new Widget();
-        updated.setId(it.getId());
-        updated.setOwnerId(it.getOwnerId());
-        updated.setType(it.getType());
-        updated.setName(
-          request.getName() != null ? request.getName() : it.getName()
-        );
-        updated.setSortOrder(
-          request.getSortOrder() != null
-            ? request.getSortOrder()
-            : it.getSortOrder()
-        );
-        updated.setConfig(
-          request.getConfig() != null ? request.getConfig() : it.getConfig()
-        );
-        updated.setEnabled(it.getEnabled());
-        widgetRepository.update(updated);
-        notificationSender.send(
-          it.getType(),
-          new WidgetChangedEvent("updated", updated.asDto())
-        );
-        return updated;
-      })
+      .map(it -> request.getName() != null ? it.setName(request.getName()) : it)
+      .map(it ->
+        request.getSortOrder() != null
+          ? it.setSortOrder(request.getSortOrder())
+          : it
+      )
+      .map(it ->
+        request.getConfig() != null ? it.withConfig(request.getConfig()) : it
+      )
+      .map(Widget::save)
       .map(updated -> HttpResponse.ok(updated))
       .orElseGet(() -> HttpResponse.notFound());
   }
 
   @Secured(SecurityRule.IS_ANONYMOUS)
   @Get
-  public HttpResponse<List<Widget>> list(@Nullable Authentication auth) {
+  public HttpResponse<List<Widget>> list(Authentication auth) {
     final Optional<String> ownerId = getOwnerId(auth);
     if (ownerId.isEmpty()) {
       return HttpResponse.unauthorized();
     }
-    return HttpResponse.ok(widgetRepository.find(ownerId.get()));
+    return HttpResponse.ok(widgetRepository.listByOwnerId(ownerId.get()));
   }
 
   @Get("{id}")
@@ -146,7 +133,7 @@ public class WidgetController extends BaseController {
       return HttpResponse.unauthorized();
     }
     return widgetRepository
-      .find(ownerId.get(), id)
+      .findByOwnerIdAndId(ownerId.get(), id)
       .map(HttpResponse::ok)
       .orElseGet(() -> HttpResponse.notFound());
   }

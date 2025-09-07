@@ -2,33 +2,52 @@ package io.github.opendonationassistant.widget.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
+import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
+import io.github.opendonationassistant.widget.repository.Widget;
+import io.github.opendonationassistant.widget.repository.WidgetData;
+import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.instancio.junit.Given;
+import org.instancio.junit.InstancioExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.github.opendonationassistant.widget.repository.Widget;
-
+@ExtendWith(InstancioExtension.class)
 public class WidgetTest {
 
+  WidgetDataRepository repository = mock(WidgetDataRepository.class);
+  WidgetChangedNotificationSender notificationSender = mock(
+    WidgetChangedNotificationSender.class
+  );
+
   @Test
-  public void test() {
-    var widget = new Widget();
+  public void test(@Given WidgetData data) {
+    var widget = new Widget(
+      data.withConfig(Map.of()),
+      repository,
+      notificationSender
+    );
     var expected = Map.of("properties", List.of());
     var actual = widget.getConfig();
     assertEquals(expected, actual);
   }
 
   @Test
-  public void testReturnProperty() {
-    var widget = new Widget();
+  public void testReturnProperty(@Given WidgetData data) {
     var expected = property("targetname", "targetvalue");
-    widget.setConfig(
-      Map.of(
-        "properties",
-        List.of(expected, property("wrongname", "wrongvalue"))
-      )
+    var widget = new Widget(
+      data.withConfig(
+        Map.of(
+          "properties",
+          List.of(expected, property("wrongname", "wrongvalue"))
+        )
+      ),
+      repository,
+      notificationSender
     );
     var actual = widget.getProperty("targetname");
     assertTrue(actual.isPresent());
@@ -36,16 +55,19 @@ public class WidgetTest {
   }
 
   @Test
-  public void testReturnValue() {
-    var widget = new Widget();
-    widget.setConfig(
-      Map.of(
-        "properties",
-        List.of(
-          property("targetname", "targetvalue"),
-          property("wrongname", "wrongvalue")
+  public void testReturnValue(@Given WidgetData data) {
+    var widget = new Widget(
+      data.withConfig(
+        Map.of(
+          "properties",
+          List.of(
+            property("targetname", "targetvalue"),
+            property("wrongname", "wrongvalue")
+          )
         )
-      )
+      ),
+      repository,
+      notificationSender
     );
     var actual = widget.getValue("targetname");
     assertTrue(actual.isPresent());
@@ -53,15 +75,18 @@ public class WidgetTest {
   }
 
   @Test
-  public void testUpdatingPropertyValue() {
-    var widget = new Widget();
+  public void testUpdatingPropertyValue(@Given WidgetData data) {
     var notChangedValue = property("wrongname", "wrongvalue");
     var updatedValue = Map.of("updated", "value");
-    widget.setConfig(
-      Map.of(
-        "properties",
-        List.of(property("targetname", "targetvalue"), notChangedValue)
-      )
+    var widget = new Widget(
+      data.withConfig(
+        Map.of(
+          "properties",
+          List.of(property("targetname", "targetvalue"), notChangedValue)
+        )
+      ),
+      repository,
+      notificationSender
     );
     Widget updated = widget.updateProperty("targetname", updatedValue);
     assertEquals(updated.getValue("targetname"), Optional.of(updatedValue));
@@ -72,16 +97,19 @@ public class WidgetTest {
   }
 
   @Test
-  public void testRemoveProperty() {
-    var widget = new Widget();
-    widget.setConfig(
-      Map.of(
-        "properties",
-        List.of(
-          property("targetname", "targetvalue"),
-          property("wrongname", "wrongvalue")
+  public void testRemoveProperty(@Given WidgetData data) {
+    var widget = new Widget(
+      data.withConfig(
+        Map.of(
+          "properties",
+          List.of(
+            property("targetname", "targetvalue"),
+            property("wrongname", "wrongvalue")
+          )
         )
-      )
+      ),
+      repository,
+      notificationSender
     );
     widget.removeProperty("targetname");
     assertEquals(Optional.of("wrongvalue"), widget.getValue("wrongname"));

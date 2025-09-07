@@ -1,8 +1,6 @@
 package io.github.opendonationassistant.widget.commands;
 
-import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.commons.micronaut.BaseController;
-import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.repository.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
@@ -16,18 +14,15 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.serde.annotation.Serdeable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import jakarta.inject.Inject;
 
 @Controller
 public class AddWidgetCommand extends BaseController {
 
-  private final ODALogger log = new ODALogger(this);
   private final WidgetRepository repository;
   private final WidgetChangedNotificationSender notificationSender;
 
+  @Inject
   public AddWidgetCommand(
     WidgetRepository repository,
     WidgetChangedNotificationSender notificationSender
@@ -47,27 +42,14 @@ public class AddWidgetCommand extends BaseController {
     if (ownerId.isEmpty()) {
       return HttpResponse.unauthorized();
     }
-    var widget = new Widget();
-    widget.setType(request.type());
-    widget.setId(UUID.randomUUID().toString()); // todo change to uuidv7
-    widget.setName(
-      Optional.ofNullable(request.name()).orElseGet(() -> request.type())
-    );
-    widget.setOwnerId(ownerId.get());
-    widget.setSortOrder(request.sortOrder() != null ? request.sortOrder() : 0);
-    widget.setConfig(new HashMap<String, Object>());
-    widget.setEnabled(true);
-    log.info("Adding widget", Map.of("widget", widget));
-    repository.save(widget);
-
-    if (request.type() != null) {
-      notificationSender.send(
+    return HttpResponse.ok(
+      repository.create(
         request.type(),
-        new WidgetChangedEvent("created", widget.asDto())
-      );
-    }
-
-    return HttpResponse.ok(widget);
+        request.sortOrder(),
+        request.name(),
+        ownerId.get()
+      )
+    );
   }
 
   @Serdeable

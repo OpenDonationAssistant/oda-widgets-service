@@ -12,11 +12,10 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.inject.Inject;
 
 import java.util.Map;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Controller
 public class DumpConfigs {
@@ -26,6 +25,7 @@ public class DumpConfigs {
   private final WidgetRepository repository;
   private final WidgetChangedNotificationSender notificationSender;
 
+  @Inject
   public DumpConfigs(
     WidgetRepository repository,
     WidgetChangedNotificationSender notificationSender
@@ -37,14 +37,14 @@ public class DumpConfigs {
   @Post("/admin/widgets/dump")
   @Secured(SecurityRule.IS_ANONYMOUS)
   public void dumpCongigs(@Body DumpConfigsRequest request) {
-    final Stream<Widget> widgets = repository.findAll().stream();
+    Stream<Widget> widgets = repository.all().stream();
     if (StringUtils.isNotEmpty(request.widgetType())) {
-      widgets.filter(widget -> widget.getType().equals(request.widgetType()));
+      widgets = widgets.filter(widget -> widget.type().equals(request.widgetType()));
     }
     widgets.forEach(widget -> {
-      log.info("Dumping widget", Map.of("id", widget.getId()));
+      log.info("Dumping widget", Map.of("id", widget.id()));
       notificationSender.send(
-        widget.getType(),
+        widget.type(),
         new WidgetChangedEvent("updated", widget.asDto())
       );
     });

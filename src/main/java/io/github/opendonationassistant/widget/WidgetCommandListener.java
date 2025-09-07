@@ -22,16 +22,13 @@ public class WidgetCommandListener {
   private ODALogger log = new ODALogger(this);
   private final WidgetRepository repository;
   private final CommandSender commandSender;
-  private final WidgetChangedNotificationSender changesSender;
 
   public WidgetCommandListener(
     WidgetRepository repository,
-    CommandSender commandSender,
-    WidgetChangedNotificationSender changesSender
+    CommandSender commandSender
   ) {
     this.repository = repository;
     this.commandSender = commandSender;
-    this.changesSender = changesSender;
   }
 
   @Queue(WIDGETS)
@@ -47,16 +44,7 @@ public class WidgetCommandListener {
         .patch()
         .properties()
         .forEach(prop -> {
-          log.info(
-            "Updating property",
-            Map.of("property", prop, "oldValue", it.getProperty(prop.name()))
-          );
-          var updated = it.updateProperty(prop.name(), prop.value());
-          repository.update(updated); // TODO batch and separate
-          changesSender.send(
-            it.getType(),
-            new WidgetChangedEvent("updated", updated.asDto())
-          );
+          it.updateProperty(prop.name(), prop.value()).save();
         });
     });
 

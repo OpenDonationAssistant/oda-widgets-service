@@ -14,16 +14,12 @@ public class ReorderCommand {
   }
 
   public void execute(String ownerId, WidgetRepository repository) {
-    var widgets = repository.find(ownerId);
-    var updatedWidgets = widgets
+    var widgets = repository.listByOwnerId(ownerId);
+    widgets
       .stream()
-      .map(it -> {
-        var order = ids.indexOf(it.getId());
-        // TODO: immutable
-        it.setSortOrder(order > -1 ? order : widgets.size());
-        repository.update(it);
-        return it;
-      })
-      .toList();
+      .forEach(it -> {
+        var order = ids.indexOf(it.id());
+        it.setSortOrder(order > -1 ? order : widgets.size()).save();
+      });
   }
 }

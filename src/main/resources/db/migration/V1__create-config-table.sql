@@ -1,4 +1,4 @@
-create table widget.widget(
+create table widget(
   id varchar(255) not null,
 	display_name varchar(255) not null,
 	owner_id varchar(255) not null,

@@ -1,15 +1,21 @@
 package io.github.opendonationassistant.widget;
 
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.annotation.Nullable;
 
 @Serdeable
 public class UpdateWidgetRequest {
 
+  @Nullable
   private String name;
+
+  @Nullable
   private java.util.Map<String, Object> config;
+
+  @Nullable
   private Integer sortOrder;
 
-  public String getName() {
+  public @Nullable String getName() {
     return name;
   }
 
@@ -17,7 +23,7 @@ public class UpdateWidgetRequest {
     this.name = name;
   }
 
-  public java.util.Map<String, Object> getConfig() {
+  public @Nullable java.util.Map<String, Object> getConfig() {
     return config;
   }
 
@@ -25,12 +31,11 @@ public class UpdateWidgetRequest {
     this.config = config;
   }
 
-  public Integer getSortOrder() {
+  public @Nullable Integer getSortOrder() {
     return sortOrder;
   }
 
   public void setSortOrder(Integer sortOrder) {
     this.sortOrder = sortOrder;
   }
-
 }

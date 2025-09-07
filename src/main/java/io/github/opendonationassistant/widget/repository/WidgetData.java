@@ -1,97 +1,85 @@
 package io.github.opendonationassistant.widget.repository;
 
-import java.util.Map;
-
-import io.github.opendonationassistant.commons.ToString;
 import io.micronaut.data.annotation.Id;
 import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
 import io.micronaut.data.model.DataType;
 import io.micronaut.serde.annotation.Serdeable;
+import java.util.Map;
 
 @Serdeable
 @MappedEntity("widget")
-public class WidgetData {
-
-  @Id
-  private String id;
-
-  @MappedProperty(value = "widget_type")
-  private String type;
-
-  @MappedProperty(value = "sort_order")
-  private Integer sortOrder;
-
-  @MappedProperty(value = "display_name")
-  private String name;
-
-  @MappedProperty(value = "owner_id")
-  private String ownerId;
-
-  @MappedProperty(type = DataType.JSON)
-  private Map<String, Object> config;
-
-  private boolean enabled;
-
-  public boolean getEnabled(){
-    return enabled;
+public record WidgetData(
+  @Id String id,
+  @MappedProperty(value = "widget_type") String type,
+  @MappedProperty(value = "sort_order") Integer sortOrder,
+  @MappedProperty(value = "display_name") String name,
+  @MappedProperty(value = "owner_id") String ownerId,
+  @MappedProperty(type = DataType.JSON) Map<String, Object> config,
+  boolean enabled,
+  boolean deleted
+) {
+  public WidgetData withName(String value) {
+    return new WidgetData(
+      id,
+      type,
+      sortOrder,
+      value,
+      ownerId,
+      config,
+      enabled,
+      deleted
+    );
   }
 
-  public void setEnabled(boolean enabled){
-    this.enabled = enabled;
+  public WidgetData withConfig(Map<String, Object> config) {
+    return new WidgetData(
+      id,
+      type,
+      sortOrder,
+      name,
+      ownerId,
+      config,
+      enabled,
+      deleted
+    );
   }
 
-  public String getId() {
-    return id;
+  public WidgetData withEnabled(boolean enabled) {
+    return new WidgetData(
+      id,
+      type,
+      sortOrder,
+      name,
+      ownerId,
+      config,
+      enabled,
+      deleted
+    );
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public WidgetData withDeleted(boolean deleted) {
+    return new WidgetData(
+      id,
+      type,
+      sortOrder,
+      name,
+      ownerId,
+      config,
+      enabled,
+      deleted
+    );
   }
-
-  public String getType() {
-    return type;
+  public WidgetData withSortOrder(Integer sortOrder) {
+    return new WidgetData(
+      id,
+      type,
+      sortOrder,
+      name,
+      ownerId,
+      config,
+      enabled,
+      deleted
+    );
   }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public Integer getSortOrder() {
-    return sortOrder;
-  }
-
-  public void setSortOrder(Integer sortOrder) {
-    this.sortOrder = sortOrder;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getOwnerId() {
-    return ownerId;
-  }
-
-  public void setOwnerId(String ownerId) {
-    this.ownerId = ownerId;
-  }
-
-  public Map<String, Object> getConfig() {
-    return config;
-  }
-
-  public void setConfig(Map<String, Object> config) {
-    this.config = config;
-  }
-
-  @Override
-  public String toString() {
-    return ToString.asJson(this);
-  }
-
 }

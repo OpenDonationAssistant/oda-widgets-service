@@ -15,6 +15,7 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.inject.Inject;
 
 @Controller
 public class ToggleWidgetCommand extends BaseController {
@@ -22,6 +23,7 @@ public class ToggleWidgetCommand extends BaseController {
   private final WidgetRepository repository;
   private final WidgetChangedNotificationSender notificationSender;
 
+  @Inject
   public ToggleWidgetCommand(
     WidgetRepository repository,
     WidgetChangedNotificationSender notificationSender
@@ -42,16 +44,8 @@ public class ToggleWidgetCommand extends BaseController {
       return HttpResponse.unauthorized();
     }
     return repository
-      .find(ownerId.get(), request.id())
-      .map(widget -> {
-        widget.setEnabled(!widget.getEnabled());
-        repository.update(widget);
-        notificationSender.send(
-          widget.getType(),
-          new WidgetChangedEvent("toggled", widget.asDto())
-        );
-        return widget;
-      })
+      .findByOwnerIdAndId(ownerId.get(), request.id())
+      .map(Widget::toggle)
       .map(HttpResponse::ok)
       .orElse(HttpResponse.notFound());
   }
