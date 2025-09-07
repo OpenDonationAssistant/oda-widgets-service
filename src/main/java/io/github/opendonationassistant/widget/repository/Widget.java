@@ -143,6 +143,10 @@ public class Widget {
     );
   }
 
+  public WidgetData data() {
+    return this.data;
+  }
+
   public Widget save() {
     repository.update(data);
     notificationSender.send(

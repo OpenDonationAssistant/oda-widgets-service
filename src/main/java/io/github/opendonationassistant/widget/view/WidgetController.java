@@ -1,11 +1,10 @@
-package io.github.opendonationassistant.widget;
+package io.github.opendonationassistant.widget.view;
 
 import io.github.opendonationassistant.commons.micronaut.BaseController;
-import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
+import io.github.opendonationassistant.widget.UpdateWidgetRequest;
 import io.github.opendonationassistant.widget.commands.ReorderCommand;
 import io.github.opendonationassistant.widget.repository.Widget;
-import io.github.opendonationassistant.widget.repository.WidgetData;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpResponse;
@@ -16,20 +15,14 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Patch;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.Put;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
-import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
 import org.jspecify.annotations.NullUnmarked;
 
 @Controller("/widgets")
@@ -83,7 +76,7 @@ public class WidgetController extends BaseController {
   @Patch("{id}")
   @Secured(SecurityRule.IS_AUTHENTICATED)
   @ExecuteOn(TaskExecutors.BLOCKING)
-  public HttpResponse<Widget> update(
+  public HttpResponse<WidgetDto> update(
     @PathVariable("id") String id,
     @Body UpdateWidgetRequest request,
     Authentication auth
@@ -108,23 +101,30 @@ public class WidgetController extends BaseController {
         request.getConfig() != null ? it.withConfig(request.getConfig()) : it
       )
       .map(Widget::save)
+      .map(WidgetDto::from)
       .map(updated -> HttpResponse.ok(updated))
       .orElseGet(() -> HttpResponse.notFound());
   }
 
   @Secured(SecurityRule.IS_ANONYMOUS)
   @Get
-  public HttpResponse<List<Widget>> list(Authentication auth) {
+  public HttpResponse<List<WidgetDto>> list(Authentication auth) {
     final Optional<String> ownerId = getOwnerId(auth);
     if (ownerId.isEmpty()) {
       return HttpResponse.unauthorized();
     }
-    return HttpResponse.ok(widgetRepository.listByOwnerId(ownerId.get()));
+    return HttpResponse.ok(
+      widgetRepository
+        .listByOwnerId(ownerId.get())
+        .stream()
+        .map(WidgetDto::from)
+        .toList()
+    );
   }
 
   @Get("{id}")
   @Secured(SecurityRule.IS_AUTHENTICATED)
-  public HttpResponse<Widget> get(
+  public HttpResponse<WidgetDto> get(
     @PathVariable("id") String id,
     Authentication auth
   ) {
@@ -134,6 +134,7 @@ public class WidgetController extends BaseController {
     }
     return widgetRepository
       .findByOwnerIdAndId(ownerId.get(), id)
+      .map(WidgetDto::from)
       .map(HttpResponse::ok)
       .orElseGet(() -> HttpResponse.notFound());
   }
