@@ -83,7 +83,7 @@ public class Widget {
     );
   }
 
-  public Widget updateProperty(String name, Object value) {
+  public Widget updateProperty(String name, @Nullable Object value) {
     log.info(
       "Updating property",
       Map.of("property", name, "oldValue", getValue(name), "newValue", value)
@@ -131,9 +131,7 @@ public class Widget {
                 ""
               ),
               Optional.ofNullable((String) property.get("type")).orElse(""),
-              Optional.ofNullable((Object) property.get("value")).orElseThrow(
-                () -> new RuntimeException("Missing property value")
-              )
+              (Object) property.get("value")
             );
           })
           .toList()
