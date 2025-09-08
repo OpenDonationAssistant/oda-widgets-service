@@ -1,10 +1,10 @@
 package io.github.opendonationassistant.widget.commands;
 
 import io.github.opendonationassistant.commons.micronaut.BaseController;
-import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.repository.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
+import io.github.opendonationassistant.widget.view.WidgetDto;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -35,7 +35,7 @@ public class ToggleWidgetCommand extends BaseController {
   @Post("/widgets/commands/toggle")
   @Secured(SecurityRule.IS_AUTHENTICATED)
   @ExecuteOn(TaskExecutors.BLOCKING)
-  public HttpResponse<Widget> toggleWidget(
+  public HttpResponse<WidgetDto> toggleWidget(
     Authentication auth,
     @Body ToogleWidgetRequest request
   ) {
@@ -46,6 +46,7 @@ public class ToggleWidgetCommand extends BaseController {
     return repository
       .findByOwnerIdAndId(ownerId.get(), request.id())
       .map(Widget::toggle)
+      .map(WidgetDto::from)
       .map(HttpResponse::ok)
       .orElse(HttpResponse.notFound());
   }

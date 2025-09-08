@@ -4,6 +4,7 @@ import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.repository.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
+import io.github.opendonationassistant.widget.view.WidgetDto;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -34,7 +35,7 @@ public class AddWidgetCommand extends BaseController {
   @Post("/widgets/commands/add")
   @Secured(SecurityRule.IS_AUTHENTICATED)
   @ExecuteOn(TaskExecutors.BLOCKING)
-  public HttpResponse<Widget> addWidget(
+  public HttpResponse<WidgetDto> addWidget(
     Authentication auth,
     @Body NewWidgetRequest request
   ) {
@@ -43,12 +44,12 @@ public class AddWidgetCommand extends BaseController {
       return HttpResponse.unauthorized();
     }
     return HttpResponse.ok(
-      repository.create(
+      WidgetDto.from(repository.create(
         request.type(),
         request.sortOrder(),
         request.name(),
         ownerId.get()
-      )
+      ))
     );
   }
 
