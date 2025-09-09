@@ -70,7 +70,7 @@ public class WidgetRepository {
 
   public List<Widget> listByOwnerId(String ownerId) {
     return repository
-      .listByOwnerId(ownerId)
+      .listByOwnerIdAndDeleted(ownerId, false)
       .stream()
       .map(this::convert)
       .toList();

@@ -16,8 +16,8 @@ public record WidgetData(
   @MappedProperty(value = "display_name") String name,
   @MappedProperty(value = "owner_id") String ownerId,
   @MappedProperty(type = DataType.JSON) Map<String, Object> config,
-  boolean enabled,
-  boolean deleted
+  @MappedProperty(value = "enabled") boolean enabled,
+  @MappedProperty(value = "deleted") boolean deleted
 ) {
   public WidgetData withName(String value) {
     return new WidgetData(
