@@ -4,6 +4,7 @@ import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.template.repository.TemplateRepository;
 import io.github.opendonationassistant.template.view.TemplateDto;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
@@ -28,7 +29,7 @@ public class CreateTemplate extends BaseController {
   @Secured(SecurityRule.IS_AUTHENTICATED)
   public HttpResponse<TemplateDto> execute(
     Authentication auth,
-    CreateTemplateCommand command
+    @Body CreateTemplateCommand command
   ) {
     var ownerId = getOwnerId(auth);
     if (ownerId.isEmpty()) {
