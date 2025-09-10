@@ -158,7 +158,7 @@ public class Widget {
       repository,
       notificationSender
     );
-    result.save();
+    repository.update(data);
     notificationSender.send(
       data.type(),
       new WidgetChangedEvent("toggled", result.asDto())
