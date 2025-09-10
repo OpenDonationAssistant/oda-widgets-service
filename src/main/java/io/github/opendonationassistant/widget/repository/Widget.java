@@ -153,7 +153,7 @@ public class Widget {
   }
 
   public Widget toggle() {
-    var updatedData = data.withEnabled(data.enabled());
+    var updatedData = data.withEnabled(!data.enabled());
     var result = new Widget(
       updatedData,
       repository,
