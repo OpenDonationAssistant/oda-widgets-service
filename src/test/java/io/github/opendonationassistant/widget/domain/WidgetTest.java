@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
-import io.github.opendonationassistant.widget.repository.Widget;
+import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetData;
 import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
 import java.util.List;

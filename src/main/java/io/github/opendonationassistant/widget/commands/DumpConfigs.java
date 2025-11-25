@@ -3,7 +3,7 @@ package io.github.opendonationassistant.widget.commands;
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
-import io.github.opendonationassistant.widget.repository.Widget;
+import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.annotation.Body;

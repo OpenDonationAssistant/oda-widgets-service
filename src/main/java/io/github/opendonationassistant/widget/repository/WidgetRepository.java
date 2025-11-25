@@ -4,12 +4,14 @@ import com.fasterxml.uuid.Generators;
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
+import io.github.opendonationassistant.widget.model.Widget;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import org.jspecify.annotations.NonNull;
 
 @Singleton
 public class WidgetRepository {
@@ -35,14 +37,16 @@ public class WidgetRepository {
   }
 
   private Widget convert(WidgetData data) {
-    return new Widget(data, repository, notificationSender);
+    return switch (data.type()) {
+      default -> new Widget(data, repository, notificationSender);
+    };
   }
 
   public Widget create(
-    String type,
-    Integer sortOrder,
-    String name,
-    String recipientId
+    @NonNull String type,
+    @NonNull Integer sortOrder,
+    @NonNull String name,
+    @NonNull String recipientId
   ) {
     log.info("Adding widget", Map.of("type", type, "recipientId", recipientId));
     var data = new WidgetData(

@@ -4,7 +4,7 @@ import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.UpdateWidgetRequest;
 import io.github.opendonationassistant.widget.commands.ReorderCommand;
-import io.github.opendonationassistant.widget.repository.Widget;
+import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpResponse;

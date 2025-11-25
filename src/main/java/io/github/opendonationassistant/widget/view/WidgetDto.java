@@ -1,6 +1,6 @@
 package io.github.opendonationassistant.widget.view;
 
-import io.github.opendonationassistant.widget.repository.Widget;
+import io.github.opendonationassistant.widget.model.Widget;
 import io.micronaut.serde.annotation.Serdeable;
 import java.util.Map;
 
