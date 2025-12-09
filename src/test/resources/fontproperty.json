@@ -1,0 +1,27 @@
+{
+  "size": 24,
+  "color": {
+    "angle": 0,
+    "colors": [{
+      "color": "#684aff"
+    }],
+    "gradient": false,
+    "repeating": false,
+    "gradientType": 0
+  },
+  "family": "steelfish-outline",
+  "italic": true,
+  "weight": false,
+  "outline": {
+    "color": "#000000",
+    "width": 0,
+    "enabled": false
+  },
+  "shadowWidth": 3,
+  "shadowOffsetX": 1,
+  "shadowOffsetY": 2,
+  "shadowColor": "#0C0C0C",
+  "animation": "none",
+  "underline": true,
+  "animationType": "entire"
+}

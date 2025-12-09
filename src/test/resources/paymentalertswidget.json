@@ -1,0 +1,523 @@
+{
+  "properties": [{
+    "name": "premoderation",
+    "value": {
+      "enabled": false
+    }
+  }, {
+    "name": "pause-media",
+    "value": true
+  }, {
+    "name": "alerts",
+    "value": [{
+      "id": "019abfe5-367c-7c89-b855-aee12c6f4306",
+      "audio": null,
+      "image": null,
+      "video": null,
+      "triggers": [{
+        "type": "fixed-donation-amount",
+        "amount": 100,
+        "description": "сумма равна"
+      }],
+      "properties": [{
+        "name": "name",
+        "value": "<Без названия>"
+      }, {
+        "name": "enabled",
+        "value": true
+      }, {
+        "name": "duration",
+        "value": {
+          "time": 0,
+          "limited": false
+        }
+      }, {
+        "name": "totalAppearance",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "totalAnimation",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "totalDisappearance",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "layout",
+        "value": {
+          "value": "1",
+          "imageStartPoint": null,
+          "headerStartPoint": null,
+          "messageStartPoint": null
+        }
+      }, {
+        "name": "totalWidth",
+        "value": -1
+      }, {
+        "name": "totalHeight",
+        "value": -1
+      }, {
+        "name": "totalBorder",
+        "value": {
+          "top": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "left": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "right": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "bottom": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "isSame": null
+        }
+      }, {
+        "name": "totalBackgroundColor",
+        "value": {
+          "angle": 0,
+          "colors": [{
+            "color": "rgba(0,0,0,0)"
+          }],
+          "gradient": false,
+          "repeating": false,
+          "gradientType": 0
+        }
+      }, {
+        "name": "totalBackgroundImage",
+        "value": {
+          "url": null,
+          "size": "auto",
+          "repeat": false,
+          "opacity": 1
+        }
+      }, {
+        "name": "totalRounding",
+        "value": {
+          "isSame": null,
+          "topLeft": 0,
+          "topRight": 0,
+          "bottomLeft": 0,
+          "bottomRight": 0
+        }
+      }, {
+        "name": "totalPadding",
+        "value": {
+          "top": 0,
+          "left": 0,
+          "right": 0,
+          "bottom": 0,
+          "isSame": null
+        }
+      }, {
+        "name": "totalShadow",
+        "value": {
+          "shadows": []
+        }
+      }, {
+        "name": "imageBackgroundBlur",
+        "value": false
+      }, {
+        "name": "imageDuration",
+        "value": {
+          "time": 0,
+          "limited": false
+        }
+      }, {
+        "name": "imageVolume",
+        "value": 100
+      }, {
+        "name": "imageWidth",
+        "value": -1
+      }, {
+        "name": "imageHeight",
+        "value": -1
+      }, {
+        "name": "audioDelay",
+        "value": 0
+      }, {
+        "name": "audio-volume",
+        "value": 100
+      }, {
+        "name": "headerFont",
+        "value": {
+          "size": 24,
+          "color": {
+            "angle": 0,
+            "colors": [{
+              "color": "#684aff"
+            }],
+            "gradient": false,
+            "repeating": false,
+            "gradientType": 0
+          },
+          "family": "steelfish-outline",
+          "italic": true,
+          "weight": false,
+          "outline": {
+            "color": "#000000",
+            "width": 0,
+            "enabled": false
+          },
+          "shadows": [],
+          "animation": "none",
+          "underline": true,
+          "animationType": "entire"
+        }
+      }, {
+        "name": "nicknameTextTemplate",
+        "value": "<username> - <amount>"
+      }, {
+        "name": "font",
+        "value": {
+          "size": 25,
+          "color": {
+            "angle": 0,
+            "colors": [{
+              "color": "#684aff"
+            }],
+            "gradient": false,
+            "repeating": false,
+            "gradientType": 0
+          },
+          "family": "Roboto",
+          "italic": true,
+          "weight": false,
+          "outline": {
+            "color": "#000000",
+            "width": 1,
+            "enabled": true
+          },
+          "shadows": [],
+          "animation": "flash",
+          "underline": true,
+          "animationType": "entire"
+        }
+      }, {
+        "name": "imageAppearanceDelay",
+        "value": 0
+      }, {
+        "name": "imageAppearance",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "imageAnimation",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "imageDisappearance",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "enableVoiceForHeader",
+        "value": true
+      }, {
+        "name": "headerVoiceDelay",
+        "value": 0
+      }, {
+        "name": "voiceTextTemplate",
+        "value": "Пользователь <username> оставил сообщение\n<amount> рублей пожертвовал добрый человек по имени <username> с фразой\nЩедрый донат в <amount> рублей от <username> со словами\nСтример стал богаче на <amount> рублей благодаря <username>\nПеревод на <amount> рублей стримеру <streamer> от <username>\nНекто <username> сделал подарок в размере <amount> рублей\n<streamer> теперь может покушать благодаря <username> и <amount> рублям\n<amount> рублей перекочевали в карман <streamer>, спасибо <username>\nДонат от <username> в размере <amount> рублей\nНизкий поклон <username> за <amount> рублей\nБроадкастер <streamer> теперь будет счастливее благодаря <amount> рублям от <username>\nСпасибо <username> за целых <amount> рублей, это так неожиданно и приятно\nСпасибо <username> за <amount> рублей\nПользователь <username> поддержал стримера <amount> рублями\nПользователь <username> пожертвовал <amount> рублей\nПоддержка стримера в размере <amount> рублей от <username>\nСтримеру упала денюжка от <username>\nДля <streamer> на развитие канала донат <amount> рублей от <username>\nПожертвование на развитие и поддержку канала <streamer> в размере <amount> рублей от <username>\nПлюс <amount> от <username>\nДонат <minoramount> <break time=\"1s\"/> копеек от <username>\n<username> закинул <amount>\nЕще <amount> рублей от <username>\nПользователь <username> поддержал стримера, предоставив ему 100 рублей\n<username> оказывает помощь стримеру в размере <amount> рублей\nПользователь <username> произвел безвозмедное дарение <amount> рублей\n<amount> рублей в помощь от <username>\nНекоторую значительную сумму подарил пользователь <username>\nОпределенное количество рублей подарено щедрым пользователем <username>\n<amount> рублей от <username>, премного благодарны\nПлюс-минус <amount> рублей донатом от <username>\n<streamer> сможет продолжать стримить благодаря <amount> рублям от <username>\nОсуществлен перевод на сумму <amount> от <username> в пользу стримера <streamer>\nПользователь всемирной сети Интернет, известный как <username>, поддержал стримера денежным переводом в размере <amount> рублей\nОчень рады <username> и <amount> рублям"
+      }, {
+        "name": "enableVoiceWhenMessageIsEmpty",
+        "value": true
+      }, {
+        "name": "voiceEmptyTextTemplates",
+        "value": "Пользователь <username> оставил сообщение\n<amount> рублей пожертвовал добрый человек по имени <username>\nЩедрый донат в <amount> рублей от <username>\nСтример стал богаче на <amount> рублей благодаря <username>\nПеревод на <amount> рублей стримеру <streamer> от <username>\nНекто <username> сделал подарок в размере <amount> рублей\n<streamer> теперь может покушать благодаря <username> и <amount> рублям\n<amount> рублей перекочевали в карман <streamer>, спасибо <username>\nДонат от <username> в размере <amount> рублей\nНизкий поклон <username> за <amount> рублей\nБроадкастер <streamer> теперь будет счастливее благодаря <amount> рублям от <username>\nСпасибо <username> за целых <amount> рублей, это так неожиданно и приятно\nСпасибо <username> за <amount> рублей\nПользователь <username> поддержал стримера <amount> рублями\nПользователь <username> пожертвовал <amount> рублей\nПоддержка стримера в размере <amount> рублей от <username>\nСтримеру упала денюжка от <username>\nДля <streamer> на развитие канала донат <amount> рублей от <username>\nПожертвование на развитие и поддержку канала <streamer> в размере <amount> рублей от <username>\nПлюс <amount> от <username>\nДонат <minoramount> <break time=\"1s\"/> копеек от <username>\n<username> закинул <amount>\nЕще <amount> рублей от <username>\nПользователь <username> поддержал стримера, предоставив ему 100 рублей\n<username> оказывает помощь стримеру в размере <amount> рублей\nПользователь <username> произвел безвозмедное дарение <amount> рублей\n<amount> рублей в помощь от <username>\nНекоторую значительную сумму подарил пользователь <username>\nОпределенное количество рублей подарено щедрым пользователем <username>\n<amount> рублей от <username>, премного благодарны\nПлюс-минус <amount> рублей донатом от <username>\n<streamer> сможет продолжать стримить благодаря <amount> рублям от <username>\nОсуществлен перевод на сумму <amount> от <username> в пользу стримера <streamer>\nПользователь всемирной сети Интернет, известный как <username>, поддержал стримера денежным переводом в размере <amount> рублей\nОчень рады <username> и <amount> рублям"
+      }, {
+        "name": "messageTemplate",
+        "value": "<message>"
+      }, {
+        "name": "messageDuration",
+        "value": {
+          "time": 0,
+          "limited": false
+        }
+      }, {
+        "name": "messageVoiceDelay",
+        "value": 0
+      }, {
+        "name": "messageAppearanceDelay",
+        "value": 0
+      }, {
+        "name": "messageAppearance",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "messageAnimation",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "messageDisappearance",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "enableVoiceForMessage",
+        "value": true
+      }, {
+        "name": "voiceVolume",
+        "value": 100
+      }, {
+        "name": "imageBorder",
+        "value": {
+          "top": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "left": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "right": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "bottom": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "isSame": null
+        }
+      }, {
+        "name": "imageRounding",
+        "value": {
+          "isSame": null,
+          "topLeft": 0,
+          "topRight": 0,
+          "bottomLeft": 0,
+          "bottomRight": 0
+        }
+      }, {
+        "name": "imagePadding",
+        "value": {
+          "top": 0,
+          "left": 0,
+          "right": 0,
+          "bottom": 0,
+          "isSame": null
+        }
+      }, {
+        "name": "imageShadow",
+        "value": {
+          "shadows": []
+        }
+      }, {
+        "name": "showHeader",
+        "value": true
+      }, {
+        "name": "headerDuration",
+        "value": {
+          "time": 0,
+          "limited": false
+        }
+      }, {
+        "name": "headerAppearanceDelay",
+        "value": 0
+      }, {
+        "name": "headerAppearance",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "headerAnimation",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "headerDisappearance",
+        "value": {
+          "duration": 0,
+          "animation": "none"
+        }
+      }, {
+        "name": "headerWidth",
+        "value": -1
+      }, {
+        "name": "headerHeight",
+        "value": -1
+      }, {
+        "name": "headerAlignment",
+        "value": "Center"
+      }, {
+        "name": "titleBackgroundColor",
+        "value": {
+          "angle": 0,
+          "colors": [{
+            "color": "rgba(0,0,0,0)"
+          }],
+          "gradient": false,
+          "repeating": false,
+          "gradientType": 0
+        }
+      }, {
+        "name": "headerBackgroundImage",
+        "value": {
+          "url": null,
+          "size": "auto",
+          "repeat": false,
+          "opacity": 1
+        }
+      }, {
+        "name": "headerBorder",
+        "value": {
+          "top": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "left": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "right": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "bottom": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "isSame": null
+        }
+      }, {
+        "name": "headerRounding",
+        "value": {
+          "isSame": null,
+          "topLeft": 0,
+          "topRight": 0,
+          "bottomLeft": 0,
+          "bottomRight": 0
+        }
+      }, {
+        "name": "headerPadding",
+        "value": {
+          "top": 0,
+          "left": 0,
+          "right": 0,
+          "bottom": 0,
+          "isSame": null
+        }
+      }, {
+        "name": "headerBoxShadow",
+        "value": {
+          "shadows": []
+        }
+      }, {
+        "name": "showMessage",
+        "value": true
+      }, {
+        "name": "messageWidth",
+        "value": -1
+      }, {
+        "name": "messageHeight",
+        "value": -1
+      }, {
+        "name": "messageAlignment",
+        "value": "Center"
+      }, {
+        "name": "messageBackgroundColor",
+        "value": {
+          "angle": 0,
+          "colors": [{
+            "color": "rgba(0,0,0,0)"
+          }],
+          "gradient": false,
+          "repeating": false,
+          "gradientType": 0
+        }
+      }, {
+        "name": "messageBackgroundImage",
+        "value": {
+          "url": null,
+          "size": "auto",
+          "repeat": false,
+          "opacity": 1
+        }
+      }, {
+        "name": "messageBorder",
+        "value": {
+          "top": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "left": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "right": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "bottom": {
+            "type": "solid",
+            "color": "#000000",
+            "width": 1
+          },
+          "isSame": null
+        }
+      }, {
+        "name": "messageRounding",
+        "value": {
+          "isSame": null,
+          "topLeft": 0,
+          "topRight": 0,
+          "bottomLeft": 0,
+          "bottomRight": 0
+        }
+      }, {
+        "name": "messagePadding",
+        "value": {
+          "top": 0,
+          "left": 0,
+          "right": 0,
+          "bottom": 0,
+          "isSame": null
+        }
+      }, {
+        "name": "messageBoxShadow",
+        "value": {
+          "shadows": []
+        }
+      }]
+    }]
+  }]
+}

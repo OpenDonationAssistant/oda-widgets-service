@@ -4,3 +4,4 @@ datasources:
 logger:
   levels:
     io.github.stcarolas: DEBUG
+    io.github.opendonationassistant: DEBUG

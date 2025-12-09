@@ -19,8 +19,8 @@ import jakarta.inject.Singleton;
     version = "1.0.0",
     description = "ODA Widget Service",
     license = @License(
-      name = "GPL-3.0",
-      url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
+      name = "AGPL-3.0",
+      url = "https://www.gnu.org/licenses/agpl-3.0.en.html"
     ),
     contact = @Contact(name = "stCarolas", email = "stcarolas@gmail.com")
   )
