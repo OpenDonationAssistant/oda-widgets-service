@@ -95,7 +95,19 @@ public class WidgetRepository {
       .stream()
       .map(this::convert)
       .filter(widget -> !widget.hasNoProperties())
-      .map(updateFn);
-    log.info("Update finished", Map.of());
+      .map(updateFn)
+      .forEach(widget -> {
+        log.info(
+          "Widget updated",
+          Map.of(
+            "id",
+            widget.id(),
+            "type",
+            widget.type(),
+            "recipientId",
+            widget.data().ownerId()
+          )
+        );
+      });
   }
 }
