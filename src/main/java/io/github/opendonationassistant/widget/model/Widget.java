@@ -92,6 +92,7 @@ public class Widget {
     return updated;
   }
 
+  @SuppressWarnings("unchecked")
   protected <C> List<WidgetProperty<C>> properties() {
     return this.props()
       .stream()
