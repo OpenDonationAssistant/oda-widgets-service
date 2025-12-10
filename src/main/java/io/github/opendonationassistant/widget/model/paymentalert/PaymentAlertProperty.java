@@ -1,14 +1,13 @@
 package io.github.opendonationassistant.widget.model.paymentalert;
 
+import io.github.opendonationassistant.widget.model.WidgetProperty;
+import io.github.opendonationassistant.widget.model.properties.FontProperty;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import io.github.opendonationassistant.widget.model.WidgetProperty;
-import io.github.opendonationassistant.widget.model.properties.FontProperty;
 
 public class PaymentAlertProperty
   extends WidgetProperty<List<Map<String, Object>>> {
@@ -20,6 +19,7 @@ public class PaymentAlertProperty
     value.stream().map(alert -> new PaymentAlert(alert)).forEach(alerts::add);
   }
 
+  @SuppressWarnings("unchecked")
   public PaymentAlertProperty(String name, Object value) {
     this(
       name,
@@ -51,6 +51,7 @@ public class PaymentAlertProperty
       return Optional.ofNullable((FontProperty) this.index.get("headerFont"));
     }
 
+    @SuppressWarnings("unchecked")
     protected <C> List<WidgetProperty<C>> properties() {
       return (
         (List<Object>) this.config.getOrDefault("properties", List.<Object>of())
