@@ -168,7 +168,12 @@ public class WidgetTest {
         Argument.ofInstance(new HashMap<String, Object>())
       );
     var widget = new Widget(
-      data.withConfig(Map.of("properties", List.of(property("font", config)))),
+      data.withConfig(
+        Map.of(
+          "properties",
+          List.of(property("font", config), property("untouched", "untouched"))
+        )
+      ),
       repository,
       notificationSender
     );
@@ -216,6 +221,7 @@ public class WidgetTest {
       List.of(Map.of("blur", 3, "color", "#0C0C0C", "x", 1, "y", 2)),
       font.get("shadows")
     );
+    assertEquals(Optional.of("untouched"), updated.getValue("untouched"));
   }
 
   @Test

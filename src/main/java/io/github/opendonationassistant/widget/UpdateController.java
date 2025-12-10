@@ -3,6 +3,7 @@ package io.github.opendonationassistant.widget;
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.widget.model.Update;
 import io.github.opendonationassistant.widget.model.WidgetProperty;
+import io.github.opendonationassistant.widget.model.properties.AlignmentProperty;
 import io.github.opendonationassistant.widget.model.properties.FontProperty;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.http.annotation.Controller;
@@ -29,37 +30,49 @@ public class UpdateController {
   @Post
   @Secured(SecurityRule.IS_ANONYMOUS)
   public void runUpdate() {
-    Function<WidgetProperty<?>, WidgetProperty<?>> function = property -> {
-      log.debug("Running updateFn", Map.of("propertyName", property.name()));
-      if (!(property instanceof FontProperty)) {
-        return property;
-      }
-      var font = new HashMap<>(((FontProperty) property).value());
-      var width = (Integer) font.getOrDefault("shadowWidth", 0);
-      var color = font.getOrDefault("shadowColor", "#000000");
-      var x = font.getOrDefault("shadowOffsetX", 0);
-      var y = font.getOrDefault("shadowOffsetY", 0);
-      font.remove("shadowWidth");
-      font.remove("shadowColor");
-      font.remove("shadowOffsetX");
-      font.remove("shadowOffsetY");
-      if (width > 0) {
-        font.put(
-          "shadows",
-          List.of(Map.of("blur", width, "color", color, "x", x, "y", y))
-        );
-      }
-      return WidgetProperty.of(property.name(), font);
-    };
+    widgetRepository.updateWidget(widget -> {
+      return widget.runUpdate(fontUpdate()).runUpdate(alignmentUpdate());
+    });
+  }
 
-    var update = new Update(
-      new Update.Condition(null, FontProperty.class, null),
-      function
+  private Update alignmentUpdate() {
+    return new Update(
+      new Update.Condition(null, AlignmentProperty.class, null),
+      property -> {
+        log.debug("Running updateFn", Map.of("propertyName", property.name()));
+        if (!(property instanceof AlignmentProperty)) {
+          return property;
+        }
+        var alignment = (((AlignmentProperty) property).value());
+        return WidgetProperty.of(property.name(), alignment.toLowerCase());
+      }
     );
-    widgetRepository.updateWidget(
-      WidgetRepository.DONATION_GOAL_TYPE,
-      widget -> {
-        return widget.runUpdate(update);
+  }
+
+  private Update fontUpdate() {
+    return new Update(
+      new Update.Condition(null, FontProperty.class, null),
+      property -> {
+        log.debug("Running updateFn", Map.of("propertyName", property.name()));
+        if (!(property instanceof FontProperty)) {
+          return property;
+        }
+        var font = new HashMap<>(((FontProperty) property).value());
+        var width = (Integer) font.getOrDefault("shadowWidth", 0);
+        var color = font.getOrDefault("shadowColor", "#000000");
+        var x = font.getOrDefault("shadowOffsetX", 0);
+        var y = font.getOrDefault("shadowOffsetY", 0);
+        font.remove("shadowWidth");
+        font.remove("shadowColor");
+        font.remove("shadowOffsetX");
+        font.remove("shadowOffsetY");
+        if (width > 0) {
+          font.put(
+            "shadows",
+            List.of(Map.of("blur", width, "color", color, "x", x, "y", y))
+          );
+        }
+        return WidgetProperty.of(property.name(), font);
       }
     );
   }

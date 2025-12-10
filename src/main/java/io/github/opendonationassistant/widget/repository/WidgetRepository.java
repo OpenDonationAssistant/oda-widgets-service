@@ -88,13 +88,12 @@ public class WidgetRepository {
     return repository.findByOwnerIdAndId(ownerId, id).map(this::convert);
   }
 
-  public void updateWidget(String type, Function<Widget, Widget> updateFn) {
-    log.info("Running update", Map.of("type", type));
+  public void updateWidget(Function<Widget, Widget> updateFn) {
+    log.info("Running update", Map.of());
     repository
       .findAll()
       .stream()
       .map(this::convert)
-      .filter(widget -> type.equals(widget.type()))
       .filter(widget -> !widget.hasNoProperties())
       .map(updateFn)
       .forEach(Widget::save);

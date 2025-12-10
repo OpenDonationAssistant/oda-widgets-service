@@ -50,9 +50,10 @@ public class Widget {
     return data.type();
   }
 
+  @SuppressWarnings("unchecked")
   protected List<Map<String, Object>> props() {
     var config = getConfig();
-    List<Object> properties = (List) config.getOrDefault(
+    List<Object> properties = (List<Object>) config.getOrDefault(
       "properties",
       List.<Object>of()
     );
@@ -67,39 +68,28 @@ public class Widget {
     ) {
       return this;
     }
-    return updateProperties(
+    final Widget updated = updateProperties(
       this.properties()
         .stream()
-        .filter(prop -> {
-          var result = true;
+        .map(prop -> {
           if (
             condition.propertyType() != null &&
             !condition.propertyType().isInstance(prop)
           ) {
-            result = false;
+            return prop;
           }
           if (
             condition.name() != null && !condition.name().equals(prop.name())
           ) {
-            result = false;
+            return prop;
           }
-          log.debug(
-            "Filtering props for update",
-            Map.of(
-              "name",
-              prop.name(),
-              "result",
-              result,
-              "class",
-              prop.getClass().toString()
-            )
-          );
-          return result;
+          return update.updateFn().apply(prop);
         })
-        .map(prop -> update.updateFn().apply(prop))
         .map(prop -> Map.of("name", prop.name(), "value", prop.value()))
         .toList()
-    ).save();
+    );
+    repository.update(updated.data());
+    return updated;
   }
 
   protected <C> List<WidgetProperty<C>> properties() {
