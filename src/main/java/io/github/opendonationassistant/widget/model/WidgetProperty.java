@@ -1,5 +1,8 @@
 package io.github.opendonationassistant.widget.model;
 
+import java.util.Map;
+
+import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.widget.model.donationgoal.DonationGoalLabelProperty;
 import io.github.opendonationassistant.widget.model.donationgoal.DonationGoalProperty;
 import io.github.opendonationassistant.widget.model.donaton.DonatonPriceProperty;
@@ -28,6 +31,8 @@ import io.github.opendonationassistant.widget.model.toplist.DonatersTopListLayou
 
 public class WidgetProperty<T> {
 
+  private final ODALogger log = new ODALogger(this);
+
   private String name;
   private T value;
 
@@ -44,6 +49,22 @@ public class WidgetProperty<T> {
     return value;
   }
 
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public WidgetProperty<T> update(Update update) {
+    log.debug("Running updateFn", Map.of("propertyName", name));
+    var condition = update.condition();
+    if (
+      condition.propertyType() != null &&
+      !condition.propertyType().isInstance(this)
+    ) {
+      return this;
+    }
+    if (condition.name() != null && !condition.name().equals(name)) {
+      return this;
+    }
+    return new WidgetProperty(name, (T) update.updateFn().apply(value));
+  }
+
   public static WidgetProperty<?> of(String name, Object value) {
     return switch (name) {
       case "alerts" -> new PaymentAlertProperty(name, value);
@@ -54,9 +75,11 @@ public class WidgetProperty<T> {
       case "price" -> new DonatonPriceProperty(name, value);
       case "reelWinningEffect" -> new ReelWinningEffectProperty(name, value);
       case "optionList" -> new ReelItemListProperty(name, value);
-      case "ReelItemBackgroundProperty" -> new ReelItemBackgroundProperty(name, value);
+      case "ReelItemBackgroundProperty" -> new ReelItemBackgroundProperty(
+        name,
+        value
+      );
       case "roulette-items" -> new RouletteItemsProperty(name, value);
-
       case "headerFont" -> new FontProperty(name, value); //goal
       case "font" -> new FontProperty(name, value); //goal
       case "titleFont" -> new FontProperty(name, value); //goal
@@ -68,17 +91,14 @@ public class WidgetProperty<T> {
       case "eventsAmountFont" -> new FontProperty(name, value); //horizontalevents
       case "requesterFont" -> new FontProperty(name, value); //player-info
       case "queueFont" -> new FontProperty(name, value); //player-info
-
       case "width" -> new WidthProperty(name, value); //goal
       case "headerWidth" -> new WidthProperty(name, value); //toplist
       case "listWidth" -> new WidthProperty(name, value); //toplist
-
       case "height" -> new HeightProperty(name, value); //goal
       case "headerHeight" -> new HeightProperty(name, value); //toplist
       case "listHeight" -> new HeightProperty(name, value); //toplist
       case "outerHeight" -> new HeightProperty(name, value); //goal
       case "filledHeight" -> new HeightProperty(name, value); //goal
-
       case "widgetBackgroundColor" -> new BackgroundColorProperty(name, value); //goal
       case "titleBackgroundColor" -> new BackgroundColorProperty(name, value); //goal
       case "titleBackground" -> new BackgroundColorProperty(name, value); //player-info
@@ -93,7 +113,6 @@ public class WidgetProperty<T> {
       case "background" -> new BackgroundColorProperty(name, value); //horizontalevents
       case "requesterBackground" -> new BackgroundColorProperty(name, value); //player-info
       case "queueBackground" -> new BackgroundColorProperty(name, value); //player-info
-
       case "backgroundImage" -> new BackgroundImageProperty(name, value); //goal
       case "titleBackgroundImage" -> new BackgroundImageProperty(name, value); //goal
       case "headerBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
@@ -103,7 +122,6 @@ public class WidgetProperty<T> {
       case "itemBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
       case "eventsBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
       case "lineBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
-
       case "border" -> new BorderProperty(name, value); //goal
       case "titleBorder" -> new BorderProperty(name, value); //goal
       case "itemBorder" -> new BorderProperty(name, value); //toplist
@@ -117,7 +135,6 @@ public class WidgetProperty<T> {
       case "cardBorder" -> new BorderProperty(name, value); //reel
       case "requesterBorder" -> new BorderProperty(name, value); //player-info
       case "queueBorder" -> new BorderProperty(name, value); //player-info
-
       case "padding" -> new PaddingProperty(name, value); //goal
       case "titlePadding" -> new PaddingProperty(name, value); //goal
       case "itemPadding" -> new PaddingProperty(name, value); //toplist
@@ -129,7 +146,6 @@ public class WidgetProperty<T> {
       case "linePadding" -> new PaddingProperty(name, value); //horizontalevents
       case "requesterPadding" -> new PaddingProperty(name, value); //player-info
       case "queuePadding" -> new PaddingProperty(name, value); //player-info
-
       case "rounding" -> new RoundingProperty(name, value); //goal
       case "titleRounding" -> new RoundingProperty(name, value); //goal
       case "itemRounding" -> new RoundingProperty(name, value); //toplist
@@ -141,8 +157,7 @@ public class WidgetProperty<T> {
       case "lineRounding" -> new RoundingProperty(name, value); //horizontalevents
       case "requesterRounding" -> new RoundingProperty(name, value); //player-info
       case "queueRounding" -> new RoundingProperty(name, value); //player-info
-
-      case "boxShadow" -> new BoxShadowProperty(name, value);  //goal
+      case "boxShadow" -> new BoxShadowProperty(name, value); //goal
       case "titleBoxShadow" -> new BoxShadowProperty(name, value); // goal
       case "headerBoxShadow" -> new BoxShadowProperty(name, value); // goal
       case "outerBoxShadow" -> new BoxShadowProperty(name, value); // goal
@@ -152,7 +167,6 @@ public class WidgetProperty<T> {
       case "headerShadow" -> new BoxShadowProperty(name, value); // horizontalevents
       case "eventsShadow" -> new BoxShadowProperty(name, value); // horizontalevents
       case "lineShadow" -> new BoxShadowProperty(name, value); // horizontalevents
-
       case "showTitle" -> new BooleanProperty(name, value); //goal
       case "showLabel" -> new BooleanProperty(name, value); //goal
       case "showHeader" -> new BooleanProperty(name, value); //toplist
@@ -164,18 +178,15 @@ public class WidgetProperty<T> {
       case "showRequester" -> new BooleanProperty(name, value); //player-info
       case "showQueueSize" -> new BooleanProperty(name, value); //player-info
       case "audioOnly" -> new BooleanProperty(name, value); //player-info
-
       case "titleAlignment" -> new AlignmentProperty(name, value); //goal
       case "titleTextAlign" -> new AlignmentProperty(name, value); //goal
       case "filledTextAlign" -> new AlignmentProperty(name, value); //goal
       case "headerAlignment" -> new AlignmentProperty(name, value); //toplist
       case "listAlignment" -> new AlignmentProperty(name, value); //toplist
-
       case "filledTextPlacement" -> new SingleChoiceProperty(name, value); // goal
       case "type" -> new SingleChoiceProperty(name, value); // toplist
       case "period" -> new SingleChoiceProperty(name, value); // toplist
       case "widgetType" -> new SingleChoiceProperty(name, value); // player-info
-
       case "topsize" -> new NumberProperty(name, value); // toplist
       case "gap" -> new NumberProperty(name, value); // toplist
       case "eventGap" -> new NumberProperty(name, value); // horizontalevents
@@ -183,13 +194,11 @@ public class WidgetProperty<T> {
       case "requiredAmount" -> new NumberProperty(name, value); // reel
       case "perView" -> new NumberProperty(name, value); // reel
       case "time" -> new NumberProperty(name, value); // reel
-
-      case "title" -> new TextProperty(name, value);  //toplist
-      case "text" -> new TextProperty(name, value);  //donationtimer
-      case "headerText" -> new TextProperty(name, value);  //horizontal events
-                                                     //
+      case "title" -> new TextProperty(name, value); //toplist
+      case "text" -> new TextProperty(name, value); //donationtimer
+      case "headerText" -> new TextProperty(name, value); //horizontal events
+      //
       case "timer-end" -> new DateTimeProperty(name, value); //donaton
-
       default -> new WidgetProperty<>(name, value);
     };
   }

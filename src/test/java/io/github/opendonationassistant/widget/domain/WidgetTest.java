@@ -144,11 +144,8 @@ public class WidgetTest {
       repository,
       notificationSender
     );
-    Function<WidgetProperty<?>, WidgetProperty<?>> function = arg -> {
-      if (arg.name().equals("targetname")) {
-        return new WidgetProperty<>("targetname", "updated");
-      }
-      return arg;
+    Function<Object, Object> function = arg -> {
+      return "updated";
     };
     var update = new Update(
       new Update.Condition(Widget.class, null, null),
@@ -156,6 +153,7 @@ public class WidgetTest {
     );
     var updated = widget.runUpdate(update);
     assertEquals(Optional.of("updated"), updated.getValue("targetname"));
+    assertEquals(Optional.of("updated"), updated.getValue("second"));
   }
 
   @Test
@@ -177,15 +175,9 @@ public class WidgetTest {
       repository,
       notificationSender
     );
-    Function<WidgetProperty<?>, WidgetProperty<?>> function = property -> {
-      log.debug(
-        "Running updateFn from test",
-        Map.of("propertyName", property.name())
-      );
-      if (!(property instanceof FontProperty)) {
-        return property;
-      }
-      var font = new HashMap<>(((FontProperty) property).value());
+    Function<Object, Object> function = value -> {
+      @SuppressWarnings("unchecked")
+      var font = new HashMap<>((Map<String, Object>) value);
       var width = (Integer) font.getOrDefault("shadowWidth", 0);
       var color = font.getOrDefault("shadowColor", "#000000");
       var x = font.getOrDefault("shadowOffsetX", 0);
@@ -200,7 +192,7 @@ public class WidgetTest {
           List.of(Map.of("blur", width, "color", color, "x", x, "y", y))
         );
       }
-      return WidgetProperty.of(property.name(), font);
+      return font;
     };
 
     var update = new Update(
@@ -235,11 +227,8 @@ public class WidgetTest {
       repository,
       notificationSender
     );
-    Function<WidgetProperty<?>, WidgetProperty<?>> function = arg -> {
-      if (arg.name().equals("targetname")) {
-        return new WidgetProperty<>("targetname", "updated");
-      }
-      return arg;
+    Function<Object,Object> function = arg -> {
+      return "updated";
     };
     var update = new Update(
       new Update.Condition(String.class, null, null),

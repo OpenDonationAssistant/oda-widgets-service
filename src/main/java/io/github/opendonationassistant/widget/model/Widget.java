@@ -71,20 +71,7 @@ public class Widget {
     final Widget updated = updateProperties(
       this.properties()
         .stream()
-        .map(prop -> {
-          if (
-            condition.propertyType() != null &&
-            !condition.propertyType().isInstance(prop)
-          ) {
-            return prop;
-          }
-          if (
-            condition.name() != null && !condition.name().equals(prop.name())
-          ) {
-            return prop;
-          }
-          return update.updateFn().apply(prop);
-        })
+        .map(prop -> prop.update(update))
         .map(prop -> Map.of("name", prop.name(), "value", prop.value()))
         .toList()
     );

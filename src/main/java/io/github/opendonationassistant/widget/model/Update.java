@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
 @Serdeable
 public record Update(
   Condition condition,
-  Function<WidgetProperty<?>, WidgetProperty<?>> updateFn
+  Function<Object, Object> updateFn
 ) {
   @Serdeable
   public static record Condition(

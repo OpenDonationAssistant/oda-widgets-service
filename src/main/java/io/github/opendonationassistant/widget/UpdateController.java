@@ -38,26 +38,16 @@ public class UpdateController {
   private Update alignmentUpdate() {
     return new Update(
       new Update.Condition(null, AlignmentProperty.class, null),
-      property -> {
-        log.debug("Running updateFn", Map.of("propertyName", property.name()));
-        if (!(property instanceof AlignmentProperty)) {
-          return property;
-        }
-        var alignment = (((AlignmentProperty) property).value());
-        return WidgetProperty.of(property.name(), alignment.toLowerCase());
-      }
+      value -> ((String) value).toLowerCase()
     );
   }
 
   private Update fontUpdate() {
     return new Update(
       new Update.Condition(null, FontProperty.class, null),
-      property -> {
-        log.debug("Running updateFn", Map.of("propertyName", property.name()));
-        if (!(property instanceof FontProperty)) {
-          return property;
-        }
-        var font = new HashMap<>(((FontProperty) property).value());
+      value -> {
+        @SuppressWarnings("unchecked")
+        var font = new HashMap<>((Map<String, Object>) value);
         var width = (Integer) font.getOrDefault("shadowWidth", 0);
         var color = font.getOrDefault("shadowColor", "#000000");
         var x = font.getOrDefault("shadowOffsetX", 0);
@@ -72,7 +62,7 @@ public class UpdateController {
             List.of(Map.of("blur", width, "color", color, "x", x, "y", y))
           );
         }
-        return WidgetProperty.of(property.name(), font);
+        return font;
       }
     );
   }
