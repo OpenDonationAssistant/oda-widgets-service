@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 import org.zalando.problem.Problem;
 
@@ -85,16 +86,19 @@ public class Widget {
   protected <C> List<WidgetProperty<C>> properties() {
     return this.props()
       .stream()
-      .map(entry -> {
+      .flatMap(entry -> {
         if (entry.get("name") == null || entry.get("value") == null) {
-          throw Problem.builder()
-            .withDetail("name: %s".formatted(entry.get("name")))
-            .withTitle("Invalid widget property")
-            .build();
+          log.error(
+            "Invalid widget property",
+            Map.of("name", entry.get("name"))
+          );
+          return Stream.<WidgetProperty<C>>of();
         }
-        return (WidgetProperty<C>) WidgetProperty.of(
-          (String) entry.get("name"),
-          entry.get("value")
+        return Stream.of(
+          (WidgetProperty<C>) WidgetProperty.of(
+            (String) entry.get("name"),
+            entry.get("value")
+          )
         );
       })
       .toList();

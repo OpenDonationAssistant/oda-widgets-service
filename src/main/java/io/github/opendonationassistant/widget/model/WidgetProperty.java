@@ -81,7 +81,7 @@ public class WidgetProperty<T> {
 
   public static WidgetProperty<?> of(String name, Object value) {
     return switch (name) {
-      // case "alerts" -> new PaymentAlertProperty(name, value);
+      case "alerts" -> new PaymentAlertProperty(name, value);
       // case "goal" -> new DonationGoalProperty(name, value);
       // case "labelTemplate" -> new DonationGoalLabelProperty(name, value);
       // case "layout" -> new DonatersTopListLayoutProperty(name, value); //toplist but conflicts with paymentalerts
