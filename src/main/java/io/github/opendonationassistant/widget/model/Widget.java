@@ -69,6 +69,7 @@ public class Widget {
     ) {
       return this;
     }
+    log.info("Updating widget", Map.of("id", id()));
     final Widget updated = updateProperties(
       this.properties()
         .stream()
@@ -86,7 +87,10 @@ public class Widget {
       .stream()
       .map(entry -> {
         if (entry.get("name") == null || entry.get("value") == null) {
-          throw Problem.builder().withTitle("Invalid widget property").build();
+          throw Problem.builder()
+            .withDetail("name: {}".formatted(entry.get("name")))
+            .withTitle("Invalid widget property")
+            .build();
         }
         return (WidgetProperty<C>) WidgetProperty.of(
           (String) entry.get("name"),
