@@ -88,7 +88,7 @@ public class Widget {
       .map(entry -> {
         if (entry.get("name") == null || entry.get("value") == null) {
           throw Problem.builder()
-            .withDetail("name: {}".formatted(entry.get("name")))
+            .withDetail("name: %s".formatted(entry.get("name")))
             .withTitle("Invalid widget property")
             .build();
         }
