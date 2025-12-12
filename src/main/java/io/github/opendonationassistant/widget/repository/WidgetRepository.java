@@ -37,6 +37,10 @@ public class WidgetRepository {
   }
 
   private Widget convert(WidgetData data) {
+    log.debug(
+      "Loading widget",
+      Map.of("id", data.id(), "recipientId", data.ownerId())
+    );
     return switch (data.type()) {
       default -> new Widget(data, repository, notificationSender);
     };
