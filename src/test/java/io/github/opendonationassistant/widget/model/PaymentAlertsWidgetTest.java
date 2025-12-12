@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.model.paymentalert.PaymentAlertsWidget;
+import io.github.opendonationassistant.widget.model.properties.AlignmentProperty;
 import io.github.opendonationassistant.widget.repository.WidgetData;
 import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
 import io.micronaut.core.type.Argument;
@@ -48,6 +49,49 @@ public class PaymentAlertsWidgetTest {
     assertEquals(
       "steelfish-outline",
       widget.alertProperty().alerts().getFirst().headerFont().get().family()
+    );
+  }
+
+  @Test
+  public void testUpdatingPaymentAlerts() throws IOException {
+    var config = (Map<String, Object>) ObjectMapper.getDefault()
+      .readValue(
+        getClass()
+          .getClassLoader()
+          .getResourceAsStream("paymentalertswidget.json"),
+        Argument.ofInstance(new HashMap<String, Object>())
+      );
+    var data = new WidgetData(
+      "id",
+      "payment-alerts",
+      2,
+      "name",
+      "testuser",
+      Optional.ofNullable(config).orElse(Map.of()),
+      true,
+      false
+    );
+    var widget = new PaymentAlertsWidget(data, repository, notificationSender);
+    final PaymentAlertsWidget updatedWidget =
+      (PaymentAlertsWidget) widget.runUpdate(
+        new Update(
+          new Update.Condition(null, AlignmentProperty.class, null),
+          value -> {
+            return ((String) value).toLowerCase();
+          }
+        )
+      );
+    var alignProperties = updatedWidget
+      .alertProperty()
+      .alerts()
+      .stream()
+      .map(alert -> alert.headerAlignment())
+      .filter(Optional::isPresent)
+      .toList();
+    assertEquals(1, alignProperties.size());
+    assertEquals(
+      Optional.of(new AlignmentProperty("headerAlignment", "center")),
+      alignProperties.getFirst()
     );
   }
 }

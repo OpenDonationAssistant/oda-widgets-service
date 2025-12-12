@@ -1,7 +1,5 @@
 package io.github.opendonationassistant.widget.model;
 
-import java.util.Map;
-
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.widget.model.donationgoal.DonationGoalLabelProperty;
 import io.github.opendonationassistant.widget.model.donationgoal.DonationGoalProperty;
@@ -28,6 +26,7 @@ import io.github.opendonationassistant.widget.model.reel.ReelWinningEffectProper
 import io.github.opendonationassistant.widget.model.roulette.RouletteItemsProperty;
 import io.github.opendonationassistant.widget.model.toplist.DonatersTopListCarouselProperty;
 import io.github.opendonationassistant.widget.model.toplist.DonatersTopListLayoutProperty;
+import java.util.Map;
 
 public class WidgetProperty<T> {
 
@@ -63,6 +62,21 @@ public class WidgetProperty<T> {
       return this;
     }
     return new WidgetProperty(name, (T) update.updateFn().apply(value));
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    WidgetProperty<?> that = (WidgetProperty<?>) o;
+    return name.equals(that.name) && value.equals(that.value);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = name.hashCode();
+    result = 31 * result + value.hashCode();
+    return result;
   }
 
   public static WidgetProperty<?> of(String name, Object value) {
@@ -113,15 +127,15 @@ public class WidgetProperty<T> {
       case "background" -> new BackgroundColorProperty(name, value); //horizontalevents
       case "requesterBackground" -> new BackgroundColorProperty(name, value); //player-info
       case "queueBackground" -> new BackgroundColorProperty(name, value); //player-info
-      case "backgroundImage" -> new BackgroundImageProperty(name, value); //goal
-      case "titleBackgroundImage" -> new BackgroundImageProperty(name, value); //goal
-      case "headerBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
-      case "outerImage" -> new BackgroundImageProperty(name, value); //goal
-      case "innerImage" -> new BackgroundImageProperty(name, value); //goal
-      case "listBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
-      case "itemBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
-      case "eventsBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
-      case "lineBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
+      // case "backgroundImage" -> new BackgroundImageProperty(name, value); //goal, conflicts with reel
+      // case "titleBackgroundImage" -> new BackgroundImageProperty(name, value); //goal
+      // case "headerBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
+      // case "outerImage" -> new BackgroundImageProperty(name, value); //goal
+      // case "innerImage" -> new BackgroundImageProperty(name, value); //goal
+      // case "listBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
+      // case "itemBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
+      // case "eventsBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
+      // case "lineBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
       case "border" -> new BorderProperty(name, value); //goal
       case "titleBorder" -> new BorderProperty(name, value); //goal
       case "itemBorder" -> new BorderProperty(name, value); //toplist
@@ -182,6 +196,7 @@ public class WidgetProperty<T> {
       case "titleTextAlign" -> new AlignmentProperty(name, value); //goal
       case "filledTextAlign" -> new AlignmentProperty(name, value); //goal
       case "headerAlignment" -> new AlignmentProperty(name, value); //toplist
+      case "messageAlignment" -> new AlignmentProperty(name, value); //paymentalerts
       case "listAlignment" -> new AlignmentProperty(name, value); //toplist
       case "filledTextPlacement" -> new SingleChoiceProperty(name, value); // goal
       case "type" -> new SingleChoiceProperty(name, value); // toplist

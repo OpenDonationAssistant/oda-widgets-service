@@ -4,6 +4,7 @@ import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.events.widget.WidgetConfig;
+import io.github.opendonationassistant.widget.model.paymentalert.PaymentAlertsWidget;
 import io.github.opendonationassistant.widget.repository.WidgetData;
 import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
 import io.micronaut.serde.annotation.Serdeable;
@@ -224,6 +225,21 @@ public class Widget {
 
   public Widget withConfig(Map<String, Object> config) {
     var updatedData = data.withConfig(config);
-    return new Widget(updatedData, repository, notificationSender);
+    return Widget.of(updatedData, repository, notificationSender);
+  }
+
+  public static Widget of(
+    WidgetData data,
+    WidgetDataRepository repository,
+    WidgetChangedNotificationSender notificationSender
+  ) {
+    return switch (data.type()) {
+      case "payment-alerts" -> new PaymentAlertsWidget(
+        data,
+        repository,
+        notificationSender
+      );
+      default -> new Widget(data, repository, notificationSender);
+    };
   }
 }
