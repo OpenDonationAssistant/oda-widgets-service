@@ -262,6 +262,7 @@
           <configuration>
               <buildArgs>
                   <buildArg>--initialize-at-build-time=io.micronaut.context.ApplicationContextConfigurer$1</buildArg>
+                  <buildArg>-H:+SharedArenaSupport</buildArg>
               </buildArgs>
           </configuration>
       </plugin>
