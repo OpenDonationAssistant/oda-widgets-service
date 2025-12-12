@@ -128,14 +128,14 @@ public class WidgetProperty<T> {
       case "requesterBackground" -> new BackgroundColorProperty(name, value); //player-info
       case "queueBackground" -> new BackgroundColorProperty(name, value); //player-info
       // case "backgroundImage" -> new BackgroundImageProperty(name, value); //goal, conflicts with reel
-      // case "titleBackgroundImage" -> new BackgroundImageProperty(name, value); //goal
-      // case "headerBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
-      // case "outerImage" -> new BackgroundImageProperty(name, value); //goal
-      // case "innerImage" -> new BackgroundImageProperty(name, value); //goal
-      // case "listBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
-      // case "itemBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
-      // case "eventsBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
-      // case "lineBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
+      case "titleBackgroundImage" -> new BackgroundImageProperty(name, value); //goal
+      case "headerBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
+      case "outerImage" -> new BackgroundImageProperty(name, value); //goal
+      case "innerImage" -> new BackgroundImageProperty(name, value); //goal
+      case "listBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
+      case "itemBackgroundImage" -> new BackgroundImageProperty(name, value); //toplist
+      case "eventsBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
+      case "lineBackgroundImage" -> new BackgroundImageProperty(name, value); //horizontalevents
       case "border" -> new BorderProperty(name, value); //goal
       case "titleBorder" -> new BorderProperty(name, value); //goal
       case "itemBorder" -> new BorderProperty(name, value); //toplist
