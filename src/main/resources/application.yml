@@ -26,3 +26,8 @@ jpa:
     entity-scan:
         packages: 'io.github.opendonationassistant.widget'
 infinispan.url: ${INFINISPAN_HOST:`127.0.0.1`}
+endpoints:
+  prometheus:
+    sensitive: false
+  metrics:
+    sensitive: false
