@@ -23,10 +23,8 @@ import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import org.jspecify.annotations.NullUnmarked;
 
 @Controller("/widgets")
-@NullUnmarked
 public class WidgetController extends BaseController {
 
   private final WidgetRepository widgetRepository;

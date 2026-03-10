@@ -211,12 +211,9 @@ public class Widget {
   }
 
   public Widget delete() {
-    var result = new Widget(
-      data.withDeleted(true),
-      repository,
-      notificationSender
-    );
-    result.save();
+    var updatedData = data.withDeleted(true);
+    repository.update(updatedData);
+    var result = new Widget(updatedData, repository, notificationSender);
     notificationSender.send(
       data.type(),
       new WidgetChangedEvent("deleted", result.asDto())
