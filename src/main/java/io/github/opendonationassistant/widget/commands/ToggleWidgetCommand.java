@@ -2,23 +2,22 @@ package io.github.opendonationassistant.widget.commands;
 
 import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
+import io.github.opendonationassistant.widget.api.ToggleWidgetApi;
 import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.github.opendonationassistant.widget.view.WidgetDto;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Post;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
-import io.micronaut.serde.annotation.Serdeable;
 import jakarta.inject.Inject;
 
 @Controller
-public class ToggleWidgetCommand extends BaseController {
+public class ToggleWidgetCommand extends BaseController implements ToggleWidgetApi {
 
   private final WidgetRepository repository;
   private final WidgetChangedNotificationSender notificationSender;
@@ -32,8 +31,6 @@ public class ToggleWidgetCommand extends BaseController {
     this.notificationSender = notificationSender;
   }
 
-  @Post("/widgets/commands/toggle")
-  @Secured(SecurityRule.IS_AUTHENTICATED)
   @ExecuteOn(TaskExecutors.BLOCKING)
   public HttpResponse<WidgetDto> toggleWidget(
     Authentication auth,
@@ -50,7 +47,4 @@ public class ToggleWidgetCommand extends BaseController {
       .map(HttpResponse::ok)
       .orElse(HttpResponse.notFound());
   }
-
-  @Serdeable
-  public static record ToogleWidgetRequest(String id) {}
 }

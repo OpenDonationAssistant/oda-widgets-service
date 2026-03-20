@@ -1,23 +1,22 @@
 package io.github.opendonationassistant.widget;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
+import io.github.opendonationassistant.widget.api.UpdateApi;
 import io.github.opendonationassistant.widget.model.Update;
 import io.github.opendonationassistant.widget.model.WidgetProperty;
 import io.github.opendonationassistant.widget.model.properties.AlignmentProperty;
 import io.github.opendonationassistant.widget.model.properties.FontProperty;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 @Controller("/update")
-public class UpdateController {
+public class UpdateController implements UpdateApi {
 
   private final WidgetRepository widgetRepository;
   private final ODALogger log = new ODALogger(this);
@@ -27,8 +26,6 @@ public class UpdateController {
     this.widgetRepository = repository;
   }
 
-  @Post
-  @Secured(SecurityRule.IS_ANONYMOUS)
   public void runUpdate() {
     widgetRepository.updateWidget(widget -> {
       return widget.runUpdate(fontUpdate()).runUpdate(alignmentUpdate());

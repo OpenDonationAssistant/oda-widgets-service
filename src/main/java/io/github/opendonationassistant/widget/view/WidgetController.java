@@ -3,6 +3,7 @@ package io.github.opendonationassistant.widget.view;
 import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.UpdateWidgetRequest;
+import io.github.opendonationassistant.widget.api.WidgetApi;
 import io.github.opendonationassistant.widget.commands.ReorderCommand;
 import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
@@ -10,11 +11,7 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Delete;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Patch;
 import io.micronaut.http.annotation.PathVariable;
-import io.micronaut.http.annotation.Post;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.annotation.Secured;
@@ -25,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller("/widgets")
-public class WidgetController extends BaseController {
+public class WidgetController extends BaseController implements WidgetApi {
 
   private final WidgetRepository widgetRepository;
   private final WidgetChangedNotificationSender notificationSender;
@@ -39,8 +36,6 @@ public class WidgetController extends BaseController {
     this.notificationSender = notificationSender;
   }
 
-  @Post("commands/reorder")
-  @Secured(SecurityRule.IS_AUTHENTICATED)
   @ExecuteOn(TaskExecutors.BLOCKING)
   public HttpResponse<Void> reorder(
     Authentication auth,
@@ -54,8 +49,6 @@ public class WidgetController extends BaseController {
     return HttpResponse.ok();
   }
 
-  @Delete("{id}")
-  @Secured(SecurityRule.IS_AUTHENTICATED)
   @ExecuteOn(TaskExecutors.BLOCKING)
   public HttpResponse<Void> delete(
     @PathVariable("id") String id,
@@ -71,8 +64,6 @@ public class WidgetController extends BaseController {
     return HttpResponse.ok();
   }
 
-  @Patch("{id}")
-  @Secured(SecurityRule.IS_AUTHENTICATED)
   @ExecuteOn(TaskExecutors.BLOCKING)
   public HttpResponse<WidgetDto> update(
     @PathVariable("id") String id,
@@ -104,8 +95,6 @@ public class WidgetController extends BaseController {
       .orElseGet(() -> HttpResponse.notFound());
   }
 
-  @Secured(SecurityRule.IS_ANONYMOUS)
-  @Get
   public HttpResponse<List<WidgetDto>> list(Authentication auth) {
     final Optional<String> ownerId = getOwnerId(auth);
     if (ownerId.isEmpty()) {
@@ -120,8 +109,6 @@ public class WidgetController extends BaseController {
     );
   }
 
-  @Get("{id}")
-  @Secured(SecurityRule.IS_AUTHENTICATED)
   public HttpResponse<WidgetDto> get(
     @PathVariable("id") String id,
     Authentication auth
