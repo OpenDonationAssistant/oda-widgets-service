@@ -14,18 +14,15 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
-import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
-@Controller("/widgets")
+@Controller
 public class WidgetController extends BaseController implements WidgetApi {
 
   private final WidgetRepository widgetRepository;
-  private final WidgetChangedNotificationSender notificationSender;
 
   @Inject
   public WidgetController(
@@ -33,7 +30,6 @@ public class WidgetController extends BaseController implements WidgetApi {
     WidgetChangedNotificationSender notificationSender
   ) {
     this.widgetRepository = repository;
-    this.notificationSender = notificationSender;
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
