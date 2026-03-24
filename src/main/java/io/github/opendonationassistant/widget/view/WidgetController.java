@@ -85,7 +85,7 @@ public class WidgetController extends BaseController implements WidgetApi {
       .map(it ->
         request.getConfig() != null ? it.withConfig(request.getConfig()) : it
       )
-      .map(Widget::save)
+      .map(it -> it.save("manual", null))
       .map(WidgetDto::from)
       .map(updated -> HttpResponse.ok(updated))
       .orElseGet(() -> HttpResponse.notFound());

@@ -19,7 +19,7 @@ public class ReorderCommand {
       .stream()
       .forEach(it -> {
         var order = ids.indexOf(it.id());
-        it.setSortOrder(order > -1 ? order : widgets.size()).save();
+        it.setSortOrder(order > -1 ? order : widgets.size()).save("manual", null);
       });
   }
 }

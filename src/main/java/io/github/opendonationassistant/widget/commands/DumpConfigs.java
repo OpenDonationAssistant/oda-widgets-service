@@ -42,7 +42,7 @@ public class DumpConfigs implements DumpConfigsApi {
       log.info("Dumping widget", Map.of("id", widget.id()));
       notificationSender.send(
         widget.type(),
-        new WidgetChangedEvent("updated", widget.asDto())
+        new WidgetChangedEvent("updated", widget.asDto(), "dump", null)
       );
     });
   }

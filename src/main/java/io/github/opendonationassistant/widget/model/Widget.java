@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
-import org.zalando.problem.Problem;
 
 @Serdeable
 public class Widget {
@@ -190,11 +189,11 @@ public class Widget {
     return this.data;
   }
 
-  public Widget save() {
+  public Widget save(String source, @Nullable String originId) {
     repository.update(data);
     notificationSender.send(
       data.type(),
-      new WidgetChangedEvent("updated", asDto())
+      new WidgetChangedEvent("updated", asDto(), source, originId)
     );
     return this;
   }
@@ -205,7 +204,7 @@ public class Widget {
     repository.update(updatedData);
     notificationSender.send(
       data.type(),
-      new WidgetChangedEvent("toggled", result.asDto())
+      new WidgetChangedEvent("toggled", result.asDto(), "manual", null)
     );
     return result;
   }
@@ -216,7 +215,7 @@ public class Widget {
     var result = new Widget(updatedData, repository, notificationSender);
     notificationSender.send(
       data.type(),
-      new WidgetChangedEvent("deleted", result.asDto())
+      new WidgetChangedEvent("deleted", result.asDto(), "manual", null)
     );
     return result;
   }
