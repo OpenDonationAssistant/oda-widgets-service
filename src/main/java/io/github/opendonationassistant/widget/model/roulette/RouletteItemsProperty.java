@@ -1,9 +1,8 @@
 package io.github.opendonationassistant.widget.model.roulette;
 
+import io.github.opendonationassistant.widget.model.WidgetProperty;
 import java.util.List;
 import java.util.Map;
-
-import io.github.opendonationassistant.widget.model.WidgetProperty;
 
 public class RouletteItemsProperty
   extends WidgetProperty<List<Map<String, Object>>> {

@@ -14,7 +14,7 @@ import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller("/templates")
+@Controller
 public class TemplateController extends BaseController implements TemplateApi {
 
   private TemplateRepository repository;

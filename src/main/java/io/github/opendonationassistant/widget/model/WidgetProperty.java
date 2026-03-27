@@ -1,31 +1,9 @@
 package io.github.opendonationassistant.widget.model;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
-import io.github.opendonationassistant.widget.model.donationgoal.DonationGoalLabelProperty;
-import io.github.opendonationassistant.widget.model.donationgoal.DonationGoalProperty;
-import io.github.opendonationassistant.widget.model.donaton.DonatonPriceProperty;
 import io.github.opendonationassistant.widget.model.paymentalert.PaymentAlertProperty;
 import io.github.opendonationassistant.widget.model.properties.AlignmentProperty;
-import io.github.opendonationassistant.widget.model.properties.BackgroundColorProperty;
-import io.github.opendonationassistant.widget.model.properties.BackgroundImageProperty;
-import io.github.opendonationassistant.widget.model.properties.BooleanProperty;
-import io.github.opendonationassistant.widget.model.properties.BorderProperty;
-import io.github.opendonationassistant.widget.model.properties.BoxShadowProperty;
-import io.github.opendonationassistant.widget.model.properties.DateTimeProperty;
 import io.github.opendonationassistant.widget.model.properties.FontProperty;
-import io.github.opendonationassistant.widget.model.properties.HeightProperty;
-import io.github.opendonationassistant.widget.model.properties.NumberProperty;
-import io.github.opendonationassistant.widget.model.properties.PaddingProperty;
-import io.github.opendonationassistant.widget.model.properties.RoundingProperty;
-import io.github.opendonationassistant.widget.model.properties.SingleChoiceProperty;
-import io.github.opendonationassistant.widget.model.properties.TextProperty;
-import io.github.opendonationassistant.widget.model.properties.WidthProperty;
-import io.github.opendonationassistant.widget.model.reel.ReelItemBackgroundProperty;
-import io.github.opendonationassistant.widget.model.reel.ReelItemListProperty;
-import io.github.opendonationassistant.widget.model.reel.ReelWinningEffectProperty;
-import io.github.opendonationassistant.widget.model.roulette.RouletteItemsProperty;
-import io.github.opendonationassistant.widget.model.toplist.DonatersTopListCarouselProperty;
-import io.github.opendonationassistant.widget.model.toplist.DonatersTopListLayoutProperty;
 import java.util.Map;
 
 public class WidgetProperty<T> {
