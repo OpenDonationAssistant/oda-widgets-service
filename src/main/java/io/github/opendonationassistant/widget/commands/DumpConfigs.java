@@ -9,8 +9,6 @@ import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
 import java.util.Map;

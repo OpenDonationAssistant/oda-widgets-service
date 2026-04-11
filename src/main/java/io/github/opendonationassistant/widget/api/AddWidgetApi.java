@@ -7,14 +7,13 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
+import io.micronaut.serde.annotation.Serdeable;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "widgets", description = "Widget management operations")
 public interface AddWidgetApi {
   @Operation(summary = "Add widget", description = "Creates a new widget")
   @RequestBody(
@@ -35,6 +34,6 @@ public interface AddWidgetApi {
     @Body NewWidgetRequest request
   );
 
-  @io.micronaut.serde.annotation.Serdeable
+  @Serdeable
   record NewWidgetRequest(String type, Integer sortOrder, String name) {}
 }

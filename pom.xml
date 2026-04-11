@@ -230,7 +230,6 @@
             <path>
               <groupId>io.micronaut.openapi</groupId>
               <artifactId>micronaut-openapi</artifactId>
-              <version>6.2.1</version>
             </path>
             <path>
               <groupId>com.google.errorprone</groupId>
