@@ -13,17 +13,26 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
-@Tag(name = "templates", description = "Template management operations")
 public interface TemplateApi {
-
-  @Operation(summary = "List templates", description = "Lists all templates for the authenticated user")
+  @Operation(
+    summary = "List templates",
+    description = "Lists all templates for the authenticated user"
+  )
   @Parameter(name = "widget", description = "Widget type to filter templates")
-  @ApiResponse(responseCode = "200", description = "Templates retrieved successfully", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TemplateDto.class))))
+  @ApiResponse(
+    responseCode = "200",
+    description = "Templates retrieved successfully",
+    content = @Content(
+      array = @ArraySchema(schema = @Schema(implementation = TemplateDto.class))
+    )
+  )
   @ApiResponse(responseCode = "401", description = "Unauthorized")
   @Get("/templates")
   @Secured(SecurityRule.IS_AUTHENTICATED)
-  HttpResponse<List<TemplateDto>> listTemplates(Authentication auth, @QueryValue("widget") String widgetType);
+  HttpResponse<List<TemplateDto>> listTemplates(
+    Authentication auth,
+    @QueryValue("widget") String widgetType
+  );
 }

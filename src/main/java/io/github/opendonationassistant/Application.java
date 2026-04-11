@@ -1,10 +1,12 @@
 package io.github.opendonationassistant;
 
 import io.github.opendonationassistant.rabbit.RabbitConfiguration;
+import io.github.opendonationassistant.widget.UpdateController;
 import io.github.opendonationassistant.widget.commands.DumpConfigs;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.ApplicationContextConfigurer;
 import io.micronaut.context.annotation.ContextConfigurer;
+import io.micronaut.context.annotation.Factory;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.openapi.annotation.OpenAPIExclude;
 import io.micronaut.rabbitmq.connect.ChannelInitializer;
@@ -27,7 +29,8 @@ import jakarta.inject.Singleton;
     contact = @Contact(name = "stCarolas", email = "stcarolas@gmail.com")
   )
 )
-@OpenAPIExclude(classes = { DumpConfigs.class })
+@OpenAPIExclude(classes = { DumpConfigs.class, UpdateController.class })
+@Factory
 public class Application {
 
   public static void main(String[] args) {

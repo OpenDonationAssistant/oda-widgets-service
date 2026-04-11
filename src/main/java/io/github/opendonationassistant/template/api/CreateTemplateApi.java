@@ -12,21 +12,35 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Map;
 
-@Tag(name = "templates", description = "Template management operations")
 public interface CreateTemplateApi {
-
-  @Operation(summary = "Create template", description = "Creates a new template")
-  @RequestBody(content = @Content(schema = @Schema(implementation = CreateTemplateCommand.class)))
-  @ApiResponse(responseCode = "200", description = "Template created successfully")
+  @Operation(
+    summary = "Create template",
+    description = "Creates a new template"
+  )
+  @RequestBody(
+    content = @Content(
+      schema = @Schema(implementation = CreateTemplateCommand.class)
+    )
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "Template created successfully"
+  )
   @ApiResponse(responseCode = "401", description = "Unauthorized")
   @Post("/templates/commands/create")
   @Secured(SecurityRule.IS_AUTHENTICATED)
-  HttpResponse<TemplateDto> execute(Authentication auth, @Body CreateTemplateCommand command);
+  HttpResponse<TemplateDto> execute(
+    Authentication auth,
+    @Body CreateTemplateCommand command
+  );
 
   @io.micronaut.serde.annotation.Serdeable
-  record CreateTemplateCommand(String widgetType, String showcase, List<Map<String, Object>> properties) {}
+  record CreateTemplateCommand(
+    String widgetType,
+    String showcase,
+    List<Map<String, Object>> properties
+  ) {}
 }

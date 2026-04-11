@@ -5,7 +5,6 @@ import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 
 public interface UpdateApi {
-
   @Post("/update")
   @Secured(SecurityRule.IS_ANONYMOUS)
   void runUpdate();
