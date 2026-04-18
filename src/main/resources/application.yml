@@ -23,6 +23,9 @@ flyway:
       enabled: true
       schemas: 'widget'
       default-schema: 'widget'
+datasources:
+  default:
+    schema: 'widget'
 jpa:
   default:
     entity-scan:
