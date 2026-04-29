@@ -27,9 +27,29 @@ public class UpdateController implements UpdateApi {
   }
 
   public void runUpdate() {
+    // widgetRepository.updateWidget(widget -> {
+    //   return widget.runUpdate(fontUpdate()).runUpdate(alignmentUpdate());
+    // });
     widgetRepository.updateWidget(widget -> {
-      return widget.runUpdate(fontUpdate()).runUpdate(alignmentUpdate());
+      if (widget.type().equals("media")) {
+        var cost = widget.getValue("songRequestCost").orElse(100);
+        widget
+          .addProperty("maxLen", Map.<String, Object>of("limitLen", false))
+          .addProperty(
+            "tarification",
+            Map.<String, Object>of("method", "perLink", "cost", cost)
+          )
+          .save("migration");
+      }
+      return widget;
     });
+  }
+
+  private Update mediaWidgetUpdate() {
+    return new Update(
+      new Update.Condition(null, WidgetProperty.class, null),
+      value -> ((String) value).toLowerCase()
+    );
   }
 
   private Update alignmentUpdate() {

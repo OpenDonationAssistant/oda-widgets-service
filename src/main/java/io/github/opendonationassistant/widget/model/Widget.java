@@ -8,6 +8,7 @@ import io.github.opendonationassistant.widget.model.paymentalert.PaymentAlertsWi
 import io.github.opendonationassistant.widget.repository.WidgetData;
 import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
 import io.micronaut.serde.annotation.Serdeable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,6 +130,15 @@ public class Widget {
     );
   }
 
+  public Widget addProperty(String name, Object value) {
+    log.info("Adding property", Map.of("property", name, "newValue", value));
+    final ArrayList<Map<String, Object>> updatedProps = new ArrayList<>(
+      props()
+    );
+    updatedProps.add(Map.of("name", name, "value", value));
+    return updateProperties(updatedProps);
+  }
+
   public Widget updateProperty(String name, @Nullable Object value) {
     log.info(
       "Updating property",
@@ -189,12 +199,18 @@ public class Widget {
     return this.data;
   }
 
+  public Widget save(String source) {
+    return save(source, null);
+  }
+
   public Widget save(String source, @Nullable String originId) {
     repository.update(data);
-    notificationSender.send(
-      data.type(),
-      new WidgetChangedEvent("updated", asDto(), source, originId)
-    );
+    if (!"migration".equals(source)) {
+      notificationSender.send(
+        data.type(),
+        new WidgetChangedEvent("updated", asDto(), source, originId)
+      );
+    }
     return this;
   }
 
