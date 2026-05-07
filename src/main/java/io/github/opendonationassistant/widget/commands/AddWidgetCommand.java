@@ -5,14 +5,14 @@ import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSe
 import io.github.opendonationassistant.widget.api.AddWidgetApi;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.github.opendonationassistant.widget.view.WidgetDto;
+import io.micrometer.core.annotation.Counted;
+import io.micrometer.core.annotation.Timed;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
-import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
 @Controller
@@ -31,6 +31,8 @@ public class AddWidgetCommand extends BaseController implements AddWidgetApi {
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
+  @Timed
+  @Counted
   public HttpResponse<WidgetDto> addWidget(
     Authentication auth,
     @Body NewWidgetRequest request
