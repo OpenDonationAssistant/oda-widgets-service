@@ -35,7 +35,7 @@ public class WidgetController extends BaseController implements WidgetApi {
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
-  @Counted
+  @Counted("service.widgets.reorder.count")
   public HttpResponse<Void> reorder(
     Authentication auth,
     @Body ReorderCommand command
@@ -49,7 +49,7 @@ public class WidgetController extends BaseController implements WidgetApi {
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
-  @Counted
+  @Counted("service.widgets.delete.count")
   public HttpResponse<Void> delete(
     @PathVariable("id") String id,
     Authentication auth
@@ -65,8 +65,8 @@ public class WidgetController extends BaseController implements WidgetApi {
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
-  @Counted
-  @Timed
+  @Counted("service.widgets.update.count")
+  @Timed("service.widgets.update.time")
   public HttpResponse<WidgetDto> update(
     @PathVariable("id") String id,
     @Body UpdateWidgetRequest request,
@@ -97,8 +97,8 @@ public class WidgetController extends BaseController implements WidgetApi {
       .orElseGet(() -> HttpResponse.notFound());
   }
 
-  @Counted
-  @Timed
+  @Counted("service.widgets.list.count")
+  @Timed("service.widgets.list.time")
   public HttpResponse<List<WidgetDto>> list(Authentication auth) {
     final Optional<String> ownerId = getOwnerId(auth);
     if (ownerId.isEmpty()) {
@@ -113,8 +113,8 @@ public class WidgetController extends BaseController implements WidgetApi {
     );
   }
 
-  @Counted
-  @Timed
+  @Counted("service.widgets.get.count")
+  @Timed("service.widgets.get.time")
   public HttpResponse<WidgetDto> get(
     @PathVariable("id") String id,
     Authentication auth

@@ -31,8 +31,8 @@ public class AddWidgetCommand extends BaseController implements AddWidgetApi {
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
-  @Timed
-  @Counted
+  @Timed("service.widgets.add.time")
+  @Counted("service.widgets.add.count")
   public HttpResponse<WidgetDto> addWidget(
     Authentication auth,
     @Body NewWidgetRequest request
