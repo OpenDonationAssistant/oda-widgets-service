@@ -7,8 +7,6 @@ import io.github.opendonationassistant.widget.api.WidgetApi;
 import io.github.opendonationassistant.widget.commands.ReorderCommand;
 import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
-import io.micrometer.core.annotation.Counted;
-import io.micrometer.core.annotation.Timed;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
@@ -35,7 +33,6 @@ public class WidgetController extends BaseController implements WidgetApi {
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
-  @Counted
   public HttpResponse<Void> reorder(
     Authentication auth,
     @Body ReorderCommand command
@@ -49,7 +46,6 @@ public class WidgetController extends BaseController implements WidgetApi {
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
-  @Counted
   public HttpResponse<Void> delete(
     @PathVariable("id") String id,
     Authentication auth
@@ -65,8 +61,6 @@ public class WidgetController extends BaseController implements WidgetApi {
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
-  @Counted
-  @Timed
   public HttpResponse<WidgetDto> update(
     @PathVariable("id") String id,
     @Body UpdateWidgetRequest request,
@@ -97,8 +91,6 @@ public class WidgetController extends BaseController implements WidgetApi {
       .orElseGet(() -> HttpResponse.notFound());
   }
 
-  @Counted
-  @Timed
   public HttpResponse<List<WidgetDto>> list(Authentication auth) {
     final Optional<String> ownerId = getOwnerId(auth);
     if (ownerId.isEmpty()) {
@@ -113,8 +105,6 @@ public class WidgetController extends BaseController implements WidgetApi {
     );
   }
 
-  @Counted
-  @Timed
   public HttpResponse<WidgetDto> get(
     @PathVariable("id") String id,
     Authentication auth

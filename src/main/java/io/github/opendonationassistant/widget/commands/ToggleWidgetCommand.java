@@ -6,13 +6,14 @@ import io.github.opendonationassistant.widget.api.ToggleWidgetApi;
 import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.github.opendonationassistant.widget.view.WidgetDto;
-import io.micrometer.core.annotation.Counted;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
+import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
+import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
 @Controller
@@ -31,7 +32,6 @@ public class ToggleWidgetCommand extends BaseController implements ToggleWidgetA
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
-  @Counted
   public HttpResponse<WidgetDto> toggleWidget(
     Authentication auth,
     @Body ToogleWidgetRequest request
