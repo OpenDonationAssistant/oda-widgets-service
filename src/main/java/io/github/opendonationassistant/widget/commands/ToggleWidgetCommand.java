@@ -31,7 +31,7 @@ public class ToggleWidgetCommand extends BaseController implements ToggleWidgetA
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
-  @Counted("service.widgets.toggle.count")
+  @Counted
   public HttpResponse<WidgetDto> toggleWidget(
     Authentication auth,
     @Body ToogleWidgetRequest request
