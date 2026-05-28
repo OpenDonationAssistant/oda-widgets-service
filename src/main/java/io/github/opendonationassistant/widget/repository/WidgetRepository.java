@@ -64,7 +64,7 @@ public class WidgetRepository {
       false
     );
     repository.save(data);
-    var widget = new Widget(data, repository, notificationSender);
+    var widget = Widget.of(data, repository, notificationSender);
     notificationSender.send(
       data.type(),
       new WidgetChangedEvent("created", widget.asDto(), "manual", null)
