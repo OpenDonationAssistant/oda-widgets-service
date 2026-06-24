@@ -169,7 +169,10 @@ public class WidgetTest {
       data.withConfig(
         Map.of(
           "properties",
-          List.of(property("font", config), property("untouched", "untouched"))
+          List.of(
+            property("font", Optional.ofNullable(config).orElse(Map.of())),
+            property("untouched", "untouched")
+          )
         )
       ),
       repository,
@@ -227,7 +230,7 @@ public class WidgetTest {
       repository,
       notificationSender
     );
-    Function<Object,Object> function = arg -> {
+    Function<Object, Object> function = arg -> {
       return "updated";
     };
     var update = new Update(
