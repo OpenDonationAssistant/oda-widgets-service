@@ -10,6 +10,8 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.authentication.Authentication;
 import jakarta.inject.Inject;
 import java.util.Map;
@@ -33,6 +35,7 @@ public class DumpConfigs implements DumpConfigsApi {
     this.notificationSender = notificationSender;
   }
 
+  @ExecuteOn(TaskExecutors.BLOCKING)
   public CompletableFuture<HttpResponse<Void>> dumpConfigs(
     Authentication auth,
     @Body DumpConfigsRequest request
