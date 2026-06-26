@@ -1,10 +1,10 @@
 package io.github.opendonationassistant.widget.view;
 
 import io.github.opendonationassistant.commons.micronaut.BaseController;
-import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.UpdateWidgetRequest;
 import io.github.opendonationassistant.widget.api.WidgetApi;
 import io.github.opendonationassistant.widget.commands.ReorderCommand;
+import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
 import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.core.annotation.NonNull;
@@ -27,7 +27,7 @@ public class WidgetController extends BaseController implements WidgetApi {
   @Inject
   public WidgetController(
     WidgetRepository repository,
-    WidgetChangedNotificationSender notificationSender
+    WidgetChangedEventSender notificationSender
   ) {
     this.widgetRepository = repository;
   }

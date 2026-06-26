@@ -4,10 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
-import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
+import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
 import io.github.opendonationassistant.widget.model.Update;
 import io.github.opendonationassistant.widget.model.Widget;
-import io.github.opendonationassistant.widget.model.WidgetProperty;
 import io.github.opendonationassistant.widget.model.properties.FontProperty;
 import io.github.opendonationassistant.widget.repository.WidgetData;
 import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
@@ -30,8 +29,8 @@ public class WidgetTest {
   private final ODALogger log = new ODALogger(this);
 
   WidgetDataRepository repository = mock(WidgetDataRepository.class);
-  WidgetChangedNotificationSender notificationSender = mock(
-    WidgetChangedNotificationSender.class
+  WidgetChangedEventSender notificationSender = mock(
+    WidgetChangedEventSender.class
   );
 
   @Test

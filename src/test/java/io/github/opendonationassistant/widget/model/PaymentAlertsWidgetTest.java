@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
-import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
+import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
 import io.github.opendonationassistant.widget.model.paymentalert.PaymentAlertsWidget;
 import io.github.opendonationassistant.widget.model.properties.AlignmentProperty;
 import io.github.opendonationassistant.widget.repository.WidgetData;
@@ -21,8 +21,8 @@ public class PaymentAlertsWidgetTest {
 
   final ODALogger log = new ODALogger(this);
   WidgetDataRepository repository = mock(WidgetDataRepository.class);
-  WidgetChangedNotificationSender notificationSender = mock(
-    WidgetChangedNotificationSender.class
+  WidgetChangedEventSender notificationSender = mock(
+    WidgetChangedEventSender.class
   );
 
   @Test

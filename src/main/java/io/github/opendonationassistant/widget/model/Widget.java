@@ -1,9 +1,9 @@
 package io.github.opendonationassistant.widget.model;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
+import io.github.opendonationassistant.events.widget.Widget.WidgetConfig;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
-import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
-import io.github.opendonationassistant.events.widget.WidgetConfig;
+import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
 import io.github.opendonationassistant.widget.model.paymentalert.PaymentAlertsWidget;
 import io.github.opendonationassistant.widget.repository.WidgetData;
 import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
@@ -22,13 +22,13 @@ public class Widget {
   private final ODALogger log = new ODALogger(this);
   private final WidgetData data;
   private final WidgetDataRepository repository;
-  private final WidgetChangedNotificationSender notificationSender;
+  private final WidgetChangedEventSender notificationSender;
   protected final Map<String, WidgetProperty<?>> index = new HashMap<>();
 
   public Widget(
     WidgetData data,
     WidgetDataRepository repository,
-    WidgetChangedNotificationSender notificationSender
+    WidgetChangedEventSender notificationSender
   ) {
     this.data = data;
     this.repository = repository;
@@ -176,22 +176,24 @@ public class Widget {
       data.name(),
       data.enabled(),
       data.ownerId(),
+      data.deleted(),
       new WidgetConfig(
         ((List<Object>) getConfig()
             .getOrDefault("properties", List.of())).stream()
-          .map(prop -> {
-            var property = (Map<String, Object>) prop;
-            return new io.github.opendonationassistant.events.widget.WidgetProperty(
-              Optional.ofNullable((String) property.get("name")).orElse(""),
-              Optional.ofNullable((String) property.get("displayName")).orElse(
-                ""
-              ),
-              Optional.ofNullable((String) property.get("type")).orElse(""),
-              (Object) property.get("value")
-            );
-          })
+          .map(prop -> convert((Map<String, Object>) prop))
           .toList()
       )
+    );
+  }
+
+  private io.github.opendonationassistant.events.widget.Widget.WidgetProperty convert(
+    Map<String, Object> property
+  ) {
+    return new io.github.opendonationassistant.events.widget.Widget.WidgetProperty(
+      Optional.ofNullable((String) property.get("name")).orElse(""),
+      Optional.ofNullable((String) property.get("displayName")).orElse(""),
+      Optional.ofNullable((String) property.get("type")).orElse(""),
+      (Object) property.get("value")
     );
   }
 
@@ -251,7 +253,7 @@ public class Widget {
   public static Widget of(
     WidgetData data,
     WidgetDataRepository repository,
-    WidgetChangedNotificationSender notificationSender
+    WidgetChangedEventSender notificationSender
   ) {
     return switch (data.type()) {
       case "payment-alerts" -> new PaymentAlertsWidget(

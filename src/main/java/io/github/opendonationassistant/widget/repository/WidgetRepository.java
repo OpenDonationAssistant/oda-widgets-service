@@ -3,7 +3,7 @@ package io.github.opendonationassistant.widget.repository;
 import com.fasterxml.uuid.Generators;
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
-import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
+import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
 import io.github.opendonationassistant.widget.model.Widget;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
+
 import org.jspecify.annotations.NonNull;
 
 @Singleton
@@ -25,12 +27,12 @@ public class WidgetRepository {
 
   private final ODALogger log = new ODALogger(this);
   private final WidgetDataRepository repository;
-  private final WidgetChangedNotificationSender notificationSender;
+  private final WidgetChangedEventSender notificationSender;
 
   @Inject
   public WidgetRepository(
     WidgetDataRepository repository,
-    WidgetChangedNotificationSender notificationSender
+    WidgetChangedEventSender notificationSender
   ) {
     this.repository = repository;
     this.notificationSender = notificationSender;
@@ -74,6 +76,13 @@ public class WidgetRepository {
 
   public Optional<Widget> findById(String id) {
     return repository.findById(id).map(this::convert);
+  }
+
+  public Stream<Widget> findByWidgetType(String widgetType) {
+    return repository
+      .findByType(widgetType)
+      .stream()
+      .map(this::convert);
   }
 
   public List<Widget> listByOwnerId(String ownerId) {

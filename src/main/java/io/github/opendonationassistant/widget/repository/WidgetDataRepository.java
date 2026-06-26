@@ -11,4 +11,5 @@ public interface WidgetDataRepository
   extends CrudRepository<WidgetData, String> {
   List<WidgetData> listByOwnerIdAndDeleted(String ownerId, boolean deleted);
   Optional<WidgetData> findByOwnerIdAndId(String ownerId, String id);
+  List<WidgetData> findByType(String type);
 }

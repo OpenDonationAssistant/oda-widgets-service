@@ -1,6 +1,6 @@
 package io.github.opendonationassistant.widget.model.paymentalert;
 
-import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
+import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
 import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetData;
 import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
@@ -12,7 +12,7 @@ public class PaymentAlertsWidget extends Widget {
   public PaymentAlertsWidget(
     WidgetData data,
     WidgetDataRepository repository,
-    WidgetChangedNotificationSender notificationSender
+    WidgetChangedEventSender notificationSender
   ) {
     super(data, repository, notificationSender);
   }

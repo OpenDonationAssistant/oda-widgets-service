@@ -2,8 +2,8 @@ package io.github.opendonationassistant.widget.commands;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
-import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.api.DumpConfigsApi;
+import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
 import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.core.util.StringUtils;
@@ -24,12 +24,12 @@ public class DumpConfigs implements DumpConfigsApi {
   private ODALogger log = new ODALogger(this);
 
   private final WidgetRepository repository;
-  private final WidgetChangedNotificationSender notificationSender;
+  private final WidgetChangedEventSender notificationSender;
 
   @Inject
   public DumpConfigs(
     WidgetRepository repository,
-    WidgetChangedNotificationSender notificationSender
+    WidgetChangedEventSender notificationSender
   ) {
     this.repository = repository;
     this.notificationSender = notificationSender;

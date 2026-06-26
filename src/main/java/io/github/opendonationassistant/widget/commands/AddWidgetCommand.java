@@ -1,8 +1,8 @@
 package io.github.opendonationassistant.widget.commands;
 
 import io.github.opendonationassistant.commons.micronaut.BaseController;
-import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
 import io.github.opendonationassistant.widget.api.AddWidgetApi;
+import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.github.opendonationassistant.widget.view.WidgetDto;
 import io.micronaut.http.HttpResponse;
@@ -10,21 +10,19 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
-import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
-import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 
 @Controller
 public class AddWidgetCommand extends BaseController implements AddWidgetApi {
 
   private final WidgetRepository repository;
-  private final WidgetChangedNotificationSender notificationSender;
+  private final WidgetChangedEventSender notificationSender;
 
   @Inject
   public AddWidgetCommand(
     WidgetRepository repository,
-    WidgetChangedNotificationSender notificationSender
+    WidgetChangedEventSender notificationSender
   ) {
     this.repository = repository;
     this.notificationSender = notificationSender;

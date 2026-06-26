@@ -1,6 +1,9 @@
 micronaut:
   application:
     name: oda-widget-service
+  serde:
+    serialization:
+      inclusion: ALWAYS
   security:
     token:
       bearer:

@@ -2,11 +2,10 @@ package io.github.opendonationassistant.widget.repository;
 
 import static org.mockito.Mockito.mock;
 
-import org.junit.jupiter.api.Test;
-
-import io.github.opendonationassistant.events.widget.WidgetChangedNotificationSender;
+import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import org.junit.jupiter.api.Test;
 
 @MicronautTest(environments = "allinone")
 public class WidgetRepositoryTest {
@@ -14,8 +13,8 @@ public class WidgetRepositoryTest {
   @Inject
   WidgetDataRepository repository;
 
-  WidgetChangedNotificationSender notificationSender = mock(
-    WidgetChangedNotificationSender.class
+  WidgetChangedEventSender notificationSender = mock(
+    WidgetChangedEventSender.class
   );
 
   @Test
