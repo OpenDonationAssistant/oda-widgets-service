@@ -32,7 +32,7 @@ public interface CreateTemplateApi {
   @ApiResponse(responseCode = "401", description = "Unauthorized")
   @Post("/templates/commands/create")
   @Secured(SecurityRule.IS_AUTHENTICATED)
-  HttpResponse<TemplateDto> execute(
+  HttpResponse<TemplateDto> createTemplate(
     Authentication auth,
     @Body CreateTemplateCommand command
   );

@@ -22,7 +22,7 @@ public class CreateTemplate extends BaseController implements CreateTemplateApi 
     this.repository = repository;
   }
 
-  public HttpResponse<TemplateDto> execute(
+  public HttpResponse<TemplateDto> createTemplate(
     Authentication auth,
     @Body CreateTemplateCommand command
   ) {
