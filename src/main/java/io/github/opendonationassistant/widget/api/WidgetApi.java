@@ -73,11 +73,6 @@ public interface WidgetApi {
     summary = "List widgets",
     description = "Lists all widgets for the authenticated user"
   )
-  @ApiResponse(
-    responseCode = "200",
-    description = "Widgets retrieved successfully",
-    content = @Content(schema = @Schema(implementation = WidgetDto.class))
-  )
   @ApiResponse(responseCode = "401", description = "Unauthorized")
   @Get("/widgets")
   @Secured(SecurityRule.IS_ANONYMOUS)
