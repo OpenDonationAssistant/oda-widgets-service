@@ -15,5 +15,17 @@ public record TemplateData(
   String ownerId,
   String widgetType,
   String showcase,
-  @MappedProperty(type = DataType.JSON) List<Map<String, Object>> properties
-) {}
+  @MappedProperty(type = DataType.JSON) List<Map<String, Object>> properties,
+  boolean deleted
+) {
+  public TemplateData withDeleted(boolean deleted) {
+    return new TemplateData(
+      id,
+      ownerId,
+      widgetType,
+      showcase,
+      properties,
+      deleted
+    );
+  }
+}

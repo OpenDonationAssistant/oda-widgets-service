@@ -1,5 +1,6 @@
 package io.github.opendonationassistant;
 
+import io.github.opendonationassistant.rabbit.RabbitClient;
 import io.github.opendonationassistant.rabbit.RabbitConfiguration;
 import io.github.opendonationassistant.widget.UpdateController;
 import io.github.opendonationassistant.widget.commands.DumpConfigs;
@@ -10,11 +11,14 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.openapi.annotation.OpenAPIExclude;
 import io.micronaut.rabbitmq.connect.ChannelInitializer;
+import io.micronaut.rabbitmq.connect.ChannelPool;
 import io.micronaut.runtime.Micronaut;
+import io.micronaut.serde.ObjectMapper;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 @OpenAPIDefinition(
@@ -49,5 +53,11 @@ public class Application {
   @Singleton
   public ChannelInitializer rabbitConfiguration() {
     return new RabbitConfiguration();
+  }
+
+  @Named("events")
+  @Singleton
+  public RabbitClient eventSender(ChannelPool channel, ObjectMapper mapper) {
+    return new RabbitClient(channel, mapper, "widgets");
   }
 }
