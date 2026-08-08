@@ -90,7 +90,7 @@ public class Widget {
         if (entry.get("name") == null || entry.get("value") == null) {
           log.error(
             "Invalid widget property",
-            Map.of("name", entry.get("name"))
+            Map.of("name", entry.get("name"), "widgetId", this.id())
           );
           return Stream.<WidgetProperty<C>>of();
         }
