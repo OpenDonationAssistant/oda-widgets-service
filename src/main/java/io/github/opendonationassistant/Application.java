@@ -24,7 +24,7 @@ import jakarta.inject.Singleton;
 @OpenAPIDefinition(
   info = @Info(
     title = "ODA Widget Service",
-    version = "1.0.0",
+    version = "0.14.0",
     description = "ODA Widget Service",
     license = @License(
       name = "AGPL-3.0",
