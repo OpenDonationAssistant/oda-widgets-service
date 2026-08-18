@@ -10,6 +10,7 @@ import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +34,8 @@ public class WidgetConfigRequestListenerTest {
         "testuser",
         Map.of(),
         true,
-        false
+        false,
+        List.of()
       )
     );
     dataRepository.save(
@@ -45,7 +47,8 @@ public class WidgetConfigRequestListenerTest {
         "testuser",
         Map.of(),
         true,
-        false
+        false,
+        List.of()
       )
     );
 
@@ -90,7 +93,8 @@ public class WidgetConfigRequestListenerTest {
         "testuser",
         Map.of(),
         true,
-        false
+        false,
+        List.of()
       )
     );
     dataRepository.save(
@@ -102,7 +106,8 @@ public class WidgetConfigRequestListenerTest {
         "testuser",
         Map.of(),
         true,
-        false
+        false,
+        List.of()
       )
     );
     dataRepository.save(
@@ -114,7 +119,8 @@ public class WidgetConfigRequestListenerTest {
         "testuser",
         Map.of(),
         true,
-        false
+        false,
+        List.of()
       )
     );
 

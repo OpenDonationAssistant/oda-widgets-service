@@ -5,6 +5,7 @@ import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.MappedProperty;
 import io.micronaut.data.model.DataType;
 import io.micronaut.serde.annotation.Serdeable;
+import java.util.List;
 import java.util.Map;
 
 @Serdeable
@@ -17,7 +18,8 @@ public record WidgetData(
   @MappedProperty(value = "owner_id") String ownerId,
   @MappedProperty(type = DataType.JSON) Map<String, Object> config,
   @MappedProperty(value = "enabled") boolean enabled,
-  @MappedProperty(value = "deleted") boolean deleted
+  @MappedProperty(value = "deleted") boolean deleted,
+  @MappedProperty(value = "tags", type = DataType.JSON) List<String> tags
 ) {
   public WidgetData withName(String value) {
     return new WidgetData(
@@ -28,7 +30,8 @@ public record WidgetData(
       ownerId,
       config,
       enabled,
-      deleted
+      deleted,
+      tags
     );
   }
 
@@ -41,7 +44,8 @@ public record WidgetData(
       ownerId,
       config,
       enabled,
-      deleted
+      deleted,
+      tags
     );
   }
 
@@ -54,7 +58,8 @@ public record WidgetData(
       ownerId,
       config,
       enabled,
-      deleted
+      deleted,
+      tags
     );
   }
 
@@ -67,7 +72,8 @@ public record WidgetData(
       ownerId,
       config,
       enabled,
-      deleted
+      deleted,
+      tags
     );
   }
   public WidgetData withSortOrder(Integer sortOrder) {
@@ -79,7 +85,22 @@ public record WidgetData(
       ownerId,
       config,
       enabled,
-      deleted
+      deleted,
+      tags
+    );
+  }
+
+  public WidgetData withTags(List<String> tags) {
+    return new WidgetData(
+      id,
+      type,
+      sortOrder,
+      name,
+      ownerId,
+      config,
+      enabled,
+      deleted,
+      tags
     );
   }
 }

@@ -2,6 +2,7 @@ package io.github.opendonationassistant.widget.view;
 
 import io.github.opendonationassistant.widget.model.Widget;
 import io.micronaut.serde.annotation.Serdeable;
+import java.util.List;
 import java.util.Map;
 
 @Serdeable
@@ -13,7 +14,8 @@ public record WidgetDto(
   String ownerId,
   Map<String, Object> config,
   boolean enabled,
-  boolean deleted
+  boolean deleted,
+  List<String> tags
 ) {
   public static WidgetDto from(Widget widget) {
     return new WidgetDto(
@@ -24,7 +26,8 @@ public record WidgetDto(
       widget.data().ownerId(),
       widget.data().config(),
       widget.data().enabled(),
-      widget.data().deleted()
+      widget.data().deleted(),
+      widget.tags()
     );
   }
 }

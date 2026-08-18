@@ -63,7 +63,8 @@ public class WidgetRepository {
       recipientId,
       Map.of(),
       true,
-      false
+      false,
+      List.of()
     );
     repository.save(data);
     var widget = Widget.of(data, repository, notificationSender);

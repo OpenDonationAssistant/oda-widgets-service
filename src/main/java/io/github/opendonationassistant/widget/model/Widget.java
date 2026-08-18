@@ -52,6 +52,10 @@ public class Widget {
     return data.type();
   }
 
+  public List<String> tags() {
+    return data.tags();
+  }
+
   @SuppressWarnings("unchecked")
   protected List<Map<String, Object>> props() {
     var config = getConfig();
@@ -158,6 +162,16 @@ public class Widget {
 
   public Widget setName(String name) {
     return new Widget(data.withName(name), repository, notificationSender);
+  }
+
+  public Widget addTag(String tag) {
+    var updatedTags = new ArrayList<>(tags());
+    updatedTags.add(tag);
+    return new Widget(
+      data.withTags(updatedTags),
+      repository,
+      notificationSender
+    );
   }
 
   public Widget setSortOrder(int sortOrder) {

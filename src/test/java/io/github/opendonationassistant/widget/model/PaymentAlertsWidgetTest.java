@@ -13,6 +13,7 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.serde.ObjectMapper;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,8 @@ public class PaymentAlertsWidgetTest {
       "testuser",
       Optional.ofNullable(config).orElse(Map.of()),
       true,
-      false
+      false,
+      List.of()
     );
     var widget = new PaymentAlertsWidget(data, repository, notificationSender);
     assertEquals(1, widget.alertProperty().alerts().size());
@@ -69,7 +71,8 @@ public class PaymentAlertsWidgetTest {
       "testuser",
       Optional.ofNullable(config).orElse(Map.of()),
       true,
-      false
+      false,
+      List.of()
     );
     var widget = new PaymentAlertsWidget(data, repository, notificationSender);
     final PaymentAlertsWidget updatedWidget =
