@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
 import org.jspecify.annotations.NonNull;
 
 @Singleton
@@ -80,10 +79,7 @@ public class WidgetRepository {
   }
 
   public Stream<Widget> findByWidgetType(String widgetType) {
-    return repository
-      .findByType(widgetType)
-      .stream()
-      .map(this::convert);
+    return repository.findByType(widgetType).stream().map(this::convert);
   }
 
   public List<Widget> listByOwnerId(String ownerId) {
