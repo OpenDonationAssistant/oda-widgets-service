@@ -2,13 +2,14 @@ package io.github.opendonationassistant.widget.eventbus;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.Widget;
+import io.github.opendonationassistant.rabbit.Exchange;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.rabbitmq.annotation.Queue;
 import io.micronaut.rabbitmq.annotation.RabbitListener;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.inject.Inject;
-
 import java.util.List;
+import java.util.Map;
 import org.jspecify.annotations.Nullable;
 
 @RabbitListener
@@ -18,6 +19,12 @@ public class WidgetConfigRequestListener {
   public static final String QUEUE_NAME = "widget.config-request";
   public static final io.github.opendonationassistant.rabbit.Queue QUEUE =
     new io.github.opendonationassistant.rabbit.Queue(QUEUE_NAME);
+  public static final List<Exchange> BINDINGS = List.of(
+    Exchange.Exchange(
+      "rpc",
+      Map.of(QUEUE_NAME, WidgetConfigRequestListener.QUEUE)
+    )
+  );
 
   private final WidgetRepository repository;
 
@@ -37,7 +44,8 @@ public class WidgetConfigRequestListener {
         .orElse(List.of());
     }
     if (request.widgetType() != null) {
-      return repository.findByWidgetType(request.widgetType())
+      return repository
+        .findByWidgetType(request.widgetType())
         .map(widget -> widget.asDto())
         .toList();
     }

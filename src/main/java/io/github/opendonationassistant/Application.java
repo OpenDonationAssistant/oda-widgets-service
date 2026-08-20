@@ -1,9 +1,12 @@
 package io.github.opendonationassistant;
 
+import io.github.opendonationassistant.rabbit.AMQPConfiguration;
+import io.github.opendonationassistant.rabbit.Exchange;
 import io.github.opendonationassistant.rabbit.RabbitClient;
-import io.github.opendonationassistant.rabbit.RabbitConfiguration;
 import io.github.opendonationassistant.widget.UpdateController;
+import io.github.opendonationassistant.widget.WidgetCommandListener;
 import io.github.opendonationassistant.widget.commands.DumpConfigs;
+import io.github.opendonationassistant.widget.eventbus.*;
 import io.micronaut.context.ApplicationContextBuilder;
 import io.micronaut.context.ApplicationContextConfigurer;
 import io.micronaut.context.annotation.ContextConfigurer;
@@ -20,6 +23,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import java.util.ArrayList;
 
 @OpenAPIDefinition(
   info = @Info(
@@ -52,7 +56,12 @@ public class Application {
 
   @Singleton
   public ChannelInitializer rabbitConfiguration() {
-    return new RabbitConfiguration();
+    var bindings = new ArrayList<Exchange>();
+    bindings.addAll(WidgetCommandListener.BINDINGS);
+    bindings.addAll(SetWidgetConfigRequestHandler.BINDINGS);
+    bindings.addAll(CreateWidgetRequestHandler.BINDINGS);
+    bindings.addAll(WidgetConfigRequestListener.BINDINGS);
+    return new AMQPConfiguration(bindings);
   }
 
   @Named("events")

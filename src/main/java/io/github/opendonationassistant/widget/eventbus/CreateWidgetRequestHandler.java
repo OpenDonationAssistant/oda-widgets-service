@@ -1,24 +1,31 @@
 package io.github.opendonationassistant.widget.eventbus;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
+import io.github.opendonationassistant.rabbit.Exchange;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.github.opendonationassistant.widget.view.WidgetDto;
 import io.micronaut.rabbitmq.annotation.Queue;
 import io.micronaut.rabbitmq.annotation.RabbitListener;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.inject.Inject;
+import java.util.List;
 import java.util.Map;
 
-/**
- * RabbitMQ RPC handler that listens for a {@link CreateWidgetRequest} command
- * and creates a widget of the requested type.
- */
 @RabbitListener
 public class CreateWidgetRequestHandler {
 
   private final ODALogger log = new ODALogger(this);
-  public static final String QUEUE_NAME = "widget.create-request";
   private static final Integer DEFAULT_SORT_ORDER = 0;
+
+  public static final String QUEUE_NAME = "widget.create-request";
+  public static final io.github.opendonationassistant.rabbit.Queue QUEUE =
+    new io.github.opendonationassistant.rabbit.Queue(QUEUE_NAME);
+  public static final List<Exchange> BINDINGS = List.of(
+    Exchange.Exchange(
+      "rpc",
+      Map.of(QUEUE_NAME, CreateWidgetRequestHandler.QUEUE)
+    )
+  );
 
   private final WidgetRepository repository;
 

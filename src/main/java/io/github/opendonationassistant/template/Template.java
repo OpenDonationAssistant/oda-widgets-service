@@ -1,6 +1,5 @@
 package io.github.opendonationassistant.template;
 
-import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.template.eventbus.DeletedTemplateEvent;
 import io.github.opendonationassistant.template.repository.TemplateData;
 import io.github.opendonationassistant.template.repository.TemplateDataRepository;
