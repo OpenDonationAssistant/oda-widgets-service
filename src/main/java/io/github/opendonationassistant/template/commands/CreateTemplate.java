@@ -4,6 +4,7 @@ import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.template.api.CreateTemplateApi;
 import io.github.opendonationassistant.template.repository.TemplateRepository;
 import io.github.opendonationassistant.template.view.TemplateDto;
+import io.github.opendonationassistant.widget.metrics.WidgetMetrics;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -16,10 +17,15 @@ import jakarta.inject.Inject;
 public class CreateTemplate extends BaseController implements CreateTemplateApi {
 
   private TemplateRepository repository;
+  private WidgetMetrics metrics;
 
   @Inject
-  public CreateTemplate(TemplateRepository repository) {
+  public CreateTemplate(
+    TemplateRepository repository,
+    WidgetMetrics metrics
+  ) {
     this.repository = repository;
+    this.metrics = metrics;
   }
 
   public HttpResponse<TemplateDto> createTemplate(
@@ -36,6 +42,7 @@ public class CreateTemplate extends BaseController implements CreateTemplateApi 
       command.showcase(),
       command.properties()
     );
+    metrics.templateCreated(command.widgetType(), ownerId.get());
     return HttpResponse.ok();
   }
 }

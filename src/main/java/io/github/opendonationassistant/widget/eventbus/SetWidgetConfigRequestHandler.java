@@ -2,6 +2,7 @@ package io.github.opendonationassistant.widget.eventbus;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.rabbit.Exchange;
+import io.github.opendonationassistant.widget.metrics.WidgetMetrics;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.github.opendonationassistant.widget.view.WidgetDto;
 import io.micronaut.rabbitmq.annotation.Queue;
@@ -26,10 +27,15 @@ public class SetWidgetConfigRequestHandler {
 
   private final ODALogger log = new ODALogger(this);
   private final WidgetRepository repository;
+  private final WidgetMetrics metrics;
 
   @Inject
-  public SetWidgetConfigRequestHandler(WidgetRepository repository) {
+  public SetWidgetConfigRequestHandler(
+    WidgetRepository repository,
+    WidgetMetrics metrics
+  ) {
     this.repository = repository;
+    this.metrics = metrics;
   }
 
   @Queue(QUEUE_NAME)
@@ -37,7 +43,11 @@ public class SetWidgetConfigRequestHandler {
     log.info("Set Widget Config Request received", Map.of("request", request));
     return repository
       .findById(request.widgetId())
-      .map(widget -> widget.withConfig(request.config()).save("manual", null))
+      .map(widget -> {
+        var saved = widget.withConfig(request.config()).save("manual", null);
+        metrics.widgetConfigSet(saved.type(), saved.data().ownerId());
+        return saved;
+      })
       .map(WidgetDto::from)
       .map(widget -> List.of(widget))
       .orElse(List.of());

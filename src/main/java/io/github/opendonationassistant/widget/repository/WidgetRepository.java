@@ -4,6 +4,7 @@ import com.fasterxml.uuid.Generators;
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
+import io.github.opendonationassistant.widget.metrics.WidgetMetrics;
 import io.github.opendonationassistant.widget.model.Widget;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -27,14 +28,17 @@ public class WidgetRepository {
   private final ODALogger log = new ODALogger(this);
   private final WidgetDataRepository repository;
   private final WidgetChangedEventSender notificationSender;
+  private final WidgetMetrics metrics;
 
   @Inject
   public WidgetRepository(
     WidgetDataRepository repository,
-    WidgetChangedEventSender notificationSender
+    WidgetChangedEventSender notificationSender,
+    WidgetMetrics metrics
   ) {
     this.repository = repository;
     this.notificationSender = notificationSender;
+    this.metrics = metrics;
   }
 
   private Widget convert(WidgetData data) {
@@ -71,6 +75,7 @@ public class WidgetRepository {
       data.type(),
       new WidgetChangedEvent("created", widget.asDto(), "manual", null)
     );
+    metrics.widgetAdded(data.type(), recipientId);
     return widget;
   }
 

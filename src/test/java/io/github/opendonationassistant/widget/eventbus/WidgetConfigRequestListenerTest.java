@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.opendonationassistant.widget.eventbus.WidgetConfigRequestListener.WidgetConfigRequest;
+import io.github.opendonationassistant.widget.metrics.WidgetMetrics;
 import io.github.opendonationassistant.widget.repository.WidgetData;
 import io.github.opendonationassistant.widget.repository.WidgetDataRepository;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -22,6 +24,8 @@ public class WidgetConfigRequestListenerTest {
 
   @Inject
   WidgetRepository repository;
+
+  WidgetMetrics metrics = new WidgetMetrics(new SimpleMeterRegistry());
 
   @Test
   public void testQueryingOneWidget() {
@@ -53,7 +57,8 @@ public class WidgetConfigRequestListenerTest {
     );
 
     WidgetConfigRequestListener listener = new WidgetConfigRequestListener(
-      repository
+      repository,
+      metrics
     );
 
     var actual = listener.handle(new WidgetConfigRequest("id", null));
@@ -69,7 +74,8 @@ public class WidgetConfigRequestListenerTest {
   @Test
   public void testReturnEmptyListWhenNoWidgets() {
     WidgetConfigRequestListener listener = new WidgetConfigRequestListener(
-      repository
+      repository,
+      metrics
     );
     var actual = listener.handle(new WidgetConfigRequest("id", null));
     assertNotNull(actual);
@@ -125,7 +131,8 @@ public class WidgetConfigRequestListenerTest {
     );
 
     WidgetConfigRequestListener listener = new WidgetConfigRequestListener(
-      repository
+      repository,
+      metrics
     );
 
     var actual = listener.handle(

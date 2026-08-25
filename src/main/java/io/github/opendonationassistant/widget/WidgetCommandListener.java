@@ -3,6 +3,7 @@ package io.github.opendonationassistant.widget;
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.WidgetCommandSender.WidgetUpdateCommand;
 import io.github.opendonationassistant.rabbit.Exchange;
+import io.github.opendonationassistant.widget.metrics.WidgetMetrics;
 import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.core.annotation.NonNull;
@@ -24,9 +25,14 @@ public class WidgetCommandListener {
 
   private ODALogger log = new ODALogger(this);
   private final WidgetRepository repository;
+  private final WidgetMetrics metrics;
 
-  public WidgetCommandListener(WidgetRepository repository) {
+  public WidgetCommandListener(
+    WidgetRepository repository,
+    WidgetMetrics metrics
+  ) {
     this.repository = repository;
+    this.metrics = metrics;
   }
 
   @Queue(QUEUE_NAME)
@@ -34,6 +40,9 @@ public class WidgetCommandListener {
     log.info("Widget Command received", Map.of("command", command));
     @NonNull
     final Optional<Widget> widget = repository.findById(command.id());
+    metrics.widgetCommandReceived(
+      widget.map(it -> it.data().ownerId()).orElse(null)
+    );
     if (widget.isEmpty()) {
       log.info("Widget not found", Map.of("id", command.id()));
     }
@@ -46,6 +55,7 @@ public class WidgetCommandListener {
             .updateProperty(prop.name(), prop.value())
             .save("command", command.id());
         });
+      metrics.widgetCommandApplied(it.data().ownerId());
     });
   }
 }

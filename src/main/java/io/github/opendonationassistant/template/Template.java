@@ -27,6 +27,10 @@ public class Template {
     repository.update(data);
   }
 
+  public String widgetType() {
+    return data.widgetType();
+  }
+
   public void delete() throws IOException {
     var updatedData = data.withDeleted(true);
     repository.update(updatedData);

@@ -4,7 +4,7 @@ import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.widget.UpdateWidgetRequest;
 import io.github.opendonationassistant.widget.api.WidgetApi;
 import io.github.opendonationassistant.widget.commands.ReorderCommand;
-import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
+import io.github.opendonationassistant.widget.metrics.WidgetMetrics;
 import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.core.annotation.NonNull;
@@ -23,13 +23,12 @@ import java.util.Optional;
 public class WidgetController extends BaseController implements WidgetApi {
 
   private final WidgetRepository widgetRepository;
+  private final WidgetMetrics metrics;
 
   @Inject
-  public WidgetController(
-    WidgetRepository repository,
-    WidgetChangedEventSender notificationSender
-  ) {
+  public WidgetController(WidgetRepository repository, WidgetMetrics metrics) {
     this.widgetRepository = repository;
+    this.metrics = metrics;
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
@@ -42,6 +41,7 @@ public class WidgetController extends BaseController implements WidgetApi {
       return HttpResponse.unauthorized();
     }
     command.execute(ownerId.get(), widgetRepository);
+    metrics.widgetReordered(ownerId.get());
     return HttpResponse.ok();
   }
 
@@ -56,7 +56,10 @@ public class WidgetController extends BaseController implements WidgetApi {
     }
     widgetRepository
       .findByOwnerIdAndId(ownerId.get(), id)
-      .ifPresent(Widget::delete);
+      .ifPresent(widget -> {
+        widget.delete();
+        metrics.widgetDeleted(widget.type(), ownerId.get());
+      });
     return HttpResponse.ok();
   }
 
@@ -85,7 +88,11 @@ public class WidgetController extends BaseController implements WidgetApi {
       .map(it ->
         request.getConfig() != null ? it.withConfig(request.getConfig()) : it
       )
-      .map(it -> it.save("manual", null))
+      .map(it -> {
+        var saved = it.save("manual", null);
+        metrics.widgetUpdated(saved.type(), ownerId.get());
+        return saved;
+      })
       .map(WidgetDto::from)
       .map(updated -> HttpResponse.ok(updated))
       .orElseGet(() -> HttpResponse.notFound());

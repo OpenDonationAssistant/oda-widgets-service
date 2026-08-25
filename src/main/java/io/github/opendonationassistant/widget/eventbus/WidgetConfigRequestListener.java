@@ -3,6 +3,7 @@ package io.github.opendonationassistant.widget.eventbus;
 import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.events.widget.Widget;
 import io.github.opendonationassistant.rabbit.Exchange;
+import io.github.opendonationassistant.widget.metrics.WidgetMetrics;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.rabbitmq.annotation.Queue;
 import io.micronaut.rabbitmq.annotation.RabbitListener;
@@ -10,6 +11,7 @@ import io.micronaut.serde.annotation.Serdeable;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
 @RabbitListener
@@ -27,28 +29,39 @@ public class WidgetConfigRequestListener {
   );
 
   private final WidgetRepository repository;
+  private final WidgetMetrics metrics;
 
   @Inject
-  public WidgetConfigRequestListener(WidgetRepository repository) {
+  public WidgetConfigRequestListener(
+    WidgetRepository repository,
+    WidgetMetrics metrics
+  ) {
     this.repository = repository;
+    this.metrics = metrics;
   }
 
   @Queue(QUEUE_NAME)
   public List<Widget> handle(WidgetConfigRequest request) {
     log.info("Widget Config Request received");
     if (request.widgetId() != null) {
-      return repository
-        .findById(request.widgetId())
+      final Optional<io.github.opendonationassistant.widget.model.Widget> found =
+        repository.findById(request.widgetId());
+      metrics.widgetConfigRequested(
+        found.map(widget -> widget.data().ownerId()).orElse(null)
+      );
+      return found
         .map(widget -> widget.asDto())
         .map(widget -> List.of(widget))
         .orElse(List.of());
     }
     if (request.widgetType() != null) {
+      metrics.widgetConfigRequested(null);
       return repository
         .findByWidgetType(request.widgetType())
         .map(widget -> widget.asDto())
         .toList();
     }
+    metrics.widgetConfigRequested(null);
     return List.of();
   }
 

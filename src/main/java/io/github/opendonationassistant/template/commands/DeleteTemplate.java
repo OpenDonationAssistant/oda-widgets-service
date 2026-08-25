@@ -3,6 +3,7 @@ package io.github.opendonationassistant.template.commands;
 import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.template.api.DeleteTemplateApi;
 import io.github.opendonationassistant.template.repository.TemplateRepository;
+import io.github.opendonationassistant.widget.metrics.WidgetMetrics;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.scheduling.TaskExecutors;
@@ -18,10 +19,15 @@ public class DeleteTemplate
   implements DeleteTemplateApi {
 
   private TemplateRepository repository;
+  private WidgetMetrics metrics;
 
   @Inject
-  public DeleteTemplate(TemplateRepository repository) {
+  public DeleteTemplate(
+    TemplateRepository repository,
+    WidgetMetrics metrics
+  ) {
     this.repository = repository;
+    this.metrics = metrics;
   }
 
   @ExecuteOn(TaskExecutors.BLOCKING)
@@ -38,6 +44,7 @@ public class DeleteTemplate
       .map(it -> {
         try {
           it.delete();
+          metrics.templateDeleted(it.widgetType(), ownerId.get());
         } catch (IOException e) {
           return HttpResponse.<Void>serverError();
         }
