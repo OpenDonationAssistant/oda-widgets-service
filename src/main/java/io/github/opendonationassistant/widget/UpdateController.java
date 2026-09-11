@@ -31,18 +31,39 @@ public class UpdateController implements UpdateApi {
     //   return widget.runUpdate(fontUpdate()).runUpdate(alignmentUpdate());
     // });
     widgetRepository.updateWidget(widget -> {
-      if (widget.type().equals("media")) {
-        var cost = widget.getValue("songRequestCost").orElse(100);
+      if (widget.type().equals(WidgetRepository.DONATION_GOAL_TYPE)) {
         widget
-          .addProperty("maxLen", Map.<String, Object>of("limitLen", false))
-          .addProperty(
-            "tarification",
-            Map.<String, Object>of("method", "perLink", "cost", cost)
+          .<List<Map<String, Object>>>getValue("goal")
+          .filter(goals ->
+            goals.stream().anyMatch(goal -> goal.containsKey("default"))
           )
-          .save("migration");
+          .map(UpdateController::migrateGoals)
+          .ifPresent(goals ->
+            widget.updateProperty("goal", goals).save("migration")
+          );
       }
       return widget;
     });
+  }
+
+  static List<Map<String, Object>> migrateGoals(
+    List<Map<String, Object>> goals
+  ) {
+    return goals
+      .stream()
+      .map(goal -> {
+        if (!goal.containsKey("default")) {
+          return goal;
+        }
+        var migrated = new HashMap<>(goal);
+        var isDefault = (Boolean) migrated.remove("default");
+        migrated.put(
+          "mode",
+          Boolean.TRUE.equals(isDefault) ? "default" : "choose"
+        );
+        return migrated;
+      })
+      .toList();
   }
 
   private Update mediaWidgetUpdate() {
