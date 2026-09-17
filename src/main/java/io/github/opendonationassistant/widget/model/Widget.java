@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
@@ -148,16 +149,13 @@ public class Widget {
       "Updating property",
       Map.of("property", name, "oldValue", getValue(name), "newValue", value)
     );
-    return updateProperties(
-      props()
-        .stream()
-        .map(property ->
-          name.equals(property.get("name"))
-            ? Map.<String, Object>of("name", name, "value", value)
-            : property
-        )
-        .toList()
+    var notChanged = props()
+      .stream()
+      .filter(prop -> !Objects.equals(prop.get("name"), (name)));
+    var updated = Stream.of(
+      Map.<String, Object>of("name", name, "value", value)
     );
+    return updateProperties(Stream.concat(notChanged, updated).toList());
   }
 
   public Widget setName(String name) {
