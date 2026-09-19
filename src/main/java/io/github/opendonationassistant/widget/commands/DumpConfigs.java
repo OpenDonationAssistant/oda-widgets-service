@@ -1,6 +1,7 @@
 package io.github.opendonationassistant.widget.commands;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
+import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.events.widget.WidgetChangedEvent;
 import io.github.opendonationassistant.widget.api.DumpConfigsApi;
 import io.github.opendonationassistant.widget.eventbus.WidgetChangedEventSender;
@@ -8,6 +9,7 @@ import io.github.opendonationassistant.widget.model.Widget;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.scheduling.TaskExecutors;
@@ -19,7 +21,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 @Controller
-public class DumpConfigs implements DumpConfigsApi {
+public class DumpConfigs extends BaseController implements DumpConfigsApi {
 
   private ODALogger log = new ODALogger(this);
 
@@ -40,6 +42,11 @@ public class DumpConfigs implements DumpConfigsApi {
     Authentication auth,
     @Body DumpConfigsRequest request
   ) {
+    if (!isAdmin(auth)) {
+      return CompletableFuture.completedFuture(
+        HttpResponse.status(HttpStatus.FORBIDDEN)
+      );
+    }
     Stream<Widget> widgets = repository.all().stream();
     if (StringUtils.isNotEmpty(request.widgetType())) {
       widgets = widgets.filter(widget ->

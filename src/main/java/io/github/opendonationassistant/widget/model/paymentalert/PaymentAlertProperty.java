@@ -102,7 +102,8 @@ public class PaymentAlertProperty
         this.properties()
           .stream()
           .map(prop -> prop.update(update))
-          .map(prop -> Map.of("name", prop.name(), "value", prop.value()))
+          .filter(prop -> prop.value() != null)
+          .map(prop -> WidgetProperty.asEntry(prop.name(), prop.value()))
           .toList();
       updatedConfig.put("properties", properties);
       return new PaymentAlert(updatedConfig);

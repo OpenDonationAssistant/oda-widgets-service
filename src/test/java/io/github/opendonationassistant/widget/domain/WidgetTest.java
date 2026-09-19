@@ -239,4 +239,69 @@ public class WidgetTest {
     var updated = widget.runUpdate(update);
     assertEquals(Optional.of("value"), updated.getValue("targetname"));
   }
+
+  @Test
+  public void testUpdatingPropertyWithNullValueRemovesIt(@Given WidgetData data) {
+    var widget = new Widget(
+      data.withConfig(
+        Map.of(
+          "properties",
+          List.of(
+            property("targetname", "targetvalue"),
+            property("keep", "kept")
+          )
+        )
+      ),
+      repository,
+      notificationSender
+    );
+
+    var updated = widget.updateProperty("targetname", null);
+
+    assertEquals(Optional.empty(), updated.getProperty("targetname"));
+    assertEquals(Optional.of("kept"), updated.getValue("keep"));
+  }
+
+  @Test
+  public void testAddingPropertyWithNullValueIsIgnored(@Given WidgetData data) {
+    var widget = new Widget(
+      data.withConfig(
+        Map.of("properties", List.of(property("keep", "kept")))
+      ),
+      repository,
+      notificationSender
+    );
+
+    var updated = widget.addProperty("nullprop", null);
+
+    assertEquals(Optional.empty(), updated.getProperty("nullprop"));
+    assertEquals(Optional.of("kept"), updated.getValue("keep"));
+  }
+
+  @Test
+  @SuppressWarnings("NullAway")
+  public void testRunUpdateWithNullResultRemovesProperty(@Given WidgetData data) {
+    var widget = new Widget(
+      data.withConfig(
+        Map.of(
+          "properties",
+          List.of(
+            property("targetname", "targetvalue"),
+            property("keep", "kept")
+          )
+        )
+      ),
+      repository,
+      notificationSender
+    );
+    var update = new Update(
+      new Update.Condition(null, null, "targetname"),
+      value -> null
+    );
+
+    var updated = widget.runUpdate(update);
+
+    assertEquals(Optional.empty(), updated.getProperty("targetname"));
+    assertEquals(Optional.of("kept"), updated.getValue("keep"));
+  }
 }

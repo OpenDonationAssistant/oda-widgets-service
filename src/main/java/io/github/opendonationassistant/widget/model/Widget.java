@@ -80,7 +80,8 @@ public class Widget {
       this.properties()
         .stream()
         .map(prop -> prop.update(update))
-        .map(prop -> Map.of("name", prop.name(), "value", prop.value()))
+        .filter(prop -> prop.value() != null)
+        .map(prop -> WidgetProperty.asEntry(prop.name(), prop.value()))
         .toList()
     );
     repository.update(updated.data());
@@ -135,16 +136,24 @@ public class Widget {
     );
   }
 
-  public Widget addProperty(String name, Object value) {
+  public Widget addProperty(String name, @Nullable Object value) {
+    if (value == null) {
+      log.info("Ignoring null property", Map.of("property", name));
+      return this;
+    }
     log.info("Adding property", Map.of("property", name, "newValue", value));
     final ArrayList<Map<String, Object>> updatedProps = new ArrayList<>(
       props()
     );
-    updatedProps.add(Map.of("name", name, "value", value));
+    updatedProps.add(WidgetProperty.asEntry(name, value));
     return updateProperties(updatedProps);
   }
 
   public Widget updateProperty(String name, @Nullable Object value) {
+    if (value == null) {
+      log.info("Removing property", Map.of("property", name));
+      return removeProperty(name);
+    }
     log.info(
       "Updating property",
       Map.of("property", name, "oldValue", getValue(name), "newValue", value)
@@ -152,9 +161,7 @@ public class Widget {
     var notChanged = props()
       .stream()
       .filter(prop -> !Objects.equals(prop.get("name"), (name)));
-    var updated = Stream.of(
-      Map.<String, Object>of("name", name, "value", value)
-    );
+    var updated = Stream.of(WidgetProperty.asEntry(name, value));
     return updateProperties(Stream.concat(notChanged, updated).toList());
   }
 

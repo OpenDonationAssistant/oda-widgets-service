@@ -4,11 +4,13 @@ import io.github.opendonationassistant.commons.logging.ODALogger;
 import io.github.opendonationassistant.widget.model.paymentalert.PaymentAlertProperty;
 import io.github.opendonationassistant.widget.model.properties.AlignmentProperty;
 import io.github.opendonationassistant.widget.model.properties.FontProperty;
+import java.util.HashMap;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 
 public class WidgetProperty<T> {
 
-  private final ODALogger log = new ODALogger(this);
+  private static final ODALogger log = new ODALogger(WidgetProperty.class);
 
   private String name;
   private T value;
@@ -24,6 +26,19 @@ public class WidgetProperty<T> {
 
   public T value() {
     return value;
+  }
+
+  /**
+   * Builds the raw config entry for a property. Null-tolerant, unlike {@code Map.of}.
+   */
+  public static Map<String, Object> asEntry(
+    String name,
+    @Nullable Object value
+  ) {
+    var entry = new HashMap<String, Object>();
+    entry.put("name", name);
+    entry.put("value", value);
+    return entry;
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })

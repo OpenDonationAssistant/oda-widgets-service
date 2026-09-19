@@ -1,22 +1,26 @@
 package io.github.opendonationassistant.widget;
 
 import io.github.opendonationassistant.commons.logging.ODALogger;
+import io.github.opendonationassistant.commons.micronaut.BaseController;
 import io.github.opendonationassistant.widget.api.UpdateApi;
 import io.github.opendonationassistant.widget.model.Update;
 import io.github.opendonationassistant.widget.model.WidgetProperty;
 import io.github.opendonationassistant.widget.model.properties.AlignmentProperty;
 import io.github.opendonationassistant.widget.model.properties.FontProperty;
 import io.github.opendonationassistant.widget.repository.WidgetRepository;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.rules.SecurityRule;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
+import io.micronaut.security.authentication.Authentication;
 import jakarta.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller("/update")
-public class UpdateController implements UpdateApi {
+public class UpdateController extends BaseController implements UpdateApi {
 
   private final WidgetRepository widgetRepository;
   private final ODALogger log = new ODALogger(this);
@@ -26,7 +30,11 @@ public class UpdateController implements UpdateApi {
     this.widgetRepository = repository;
   }
 
-  public void runUpdate() {
+  @ExecuteOn(TaskExecutors.BLOCKING)
+  public HttpResponse<Void> runUpdate(Authentication auth) {
+    if (!isAdmin(auth)) {
+      return HttpResponse.status(HttpStatus.FORBIDDEN);
+    }
     // widgetRepository.updateWidget(widget -> {
     //   return widget.runUpdate(fontUpdate()).runUpdate(alignmentUpdate());
     // });
@@ -44,6 +52,7 @@ public class UpdateController implements UpdateApi {
       }
       return widget;
     });
+    return HttpResponse.ok();
   }
 
   static List<Map<String, Object>> migrateGoals(

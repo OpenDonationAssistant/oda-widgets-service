@@ -47,15 +47,12 @@ public class WidgetCommandListener {
       log.info("Widget not found", Map.of("id", command.id()));
     }
     widget.ifPresent(it -> {
-      command
-        .patch()
-        .properties()
-        .forEach(prop -> {
-          it
-            .updateProperty(prop.name(), prop.value())
-            .save("command", command.id());
-        });
-      metrics.widgetCommandApplied(it.data().ownerId());
+      Widget updated = it;
+      for (var prop : command.patch().properties()) {
+        updated = updated.updateProperty(prop.name(), prop.value());
+      }
+      updated.save("command", command.id());
+      metrics.widgetCommandApplied(updated.data().ownerId());
     });
   }
 }

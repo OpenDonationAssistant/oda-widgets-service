@@ -1,6 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
 **Generated:** 2026-09-11
+**Updated:** 2026-09-19 — batched widget command patches, null-safe property edits, admin guards on `/update` and `/dump-configs`
 **Commit:** 0a5c374
 **Branch:** master
 
@@ -37,7 +38,7 @@ oda-widgets-service/
 |------|----------|-------|
 | Add new widget type | `widget/model/`, `WidgetProperty.of()`, `Widget.of()` | Create model class + wire in factory |
 | Add REST endpoint | `widget/api/` (interface) + `widget/commands/` or `widget/view/` (impl) | API contracts in api/, controllers implement them |
-| Add RabbitMQ listener | `widget/eventbus/` | Extend `@RabbitListener`, add binding |
+| Add RabbitMQ listener | `widget/eventbus/` (exception: `WidgetCommandListener` in `widget/` root) | Extend `@RabbitListener`, add binding |
 | Add DB migration | `src/main/resources/db/migration/` | Naming: `V<n>__description.sql` |
 | Change config schema | `widget/model/properties/` | Generic property wrappers (`FontProperty`, etc.) |
 | Modify template CRUD | `template/` | Same layered pattern as widget |
@@ -52,7 +53,7 @@ oda-widgets-service/
 | `WidgetRepository` | Domain service | `widget/repository/WidgetRepository.java` | Facade over JDBC repo + event sender |
 | `WidgetData` | `@MappedEntity` | `widget/repository/WidgetData.java` | Persistence record (9-arg constructor) |
 | `WidgetController` | REST controller | `widget/view/WidgetController.java` | GET/PATCH/DELETE + reorder |
-| `WidgetCommandListener` | RabbitMQ listener | `widget/eventbus/WidgetCommandListener.java` | Applies `WidgetUpdateCommand` patches |
+| `WidgetCommandListener` | RabbitMQ listener | `widget/WidgetCommandListener.java` (root, not `eventbus/`) | Folds all `WidgetUpdateCommand` patches, then one save + one event |
 | `WidgetChangedEventSender` | `@RabbitClient` | `widget/eventbus/WidgetChangedEventSender.java` | Publishes config changes |
 | `WidgetProperty.of()` | Factory | `widget/model/WidgetProperty.java` | Maps property names → typed classes |
 | `WidgetMetrics` | Micrometer | `widget/metrics/WidgetMetrics.java` | Counter constants (ADDED/UPDATED/DELETED) |
@@ -66,6 +67,8 @@ oda-widgets-service/
 - **Package per feature**: `widget/`, `template/` with layers: `api/`, `commands/`, `view/`, `model/`, `repository/`, `eventbus/`, `metrics/`
 - **API interface pattern**: REST contracts in `*Api` interfaces (OpenAPI-annotated), controllers implement them
 - **Records for DTOs** (`*Dto`) and persistence (`*Data`); `@Serdeable` on serialized types
+- **Property null semantics**: `Widget.updateProperty(name, null)` removes the property; `addProperty(name, null)` is a no-op; use `WidgetProperty.asEntry()` (null-tolerant) instead of `Map.of()` for property maps
+- **Admin-guarded endpoints**: `POST /update` and `POST /widgets/commands/dump-configs` require the `oda-administrator` role (`isAdmin(auth)` → 403 for authenticated non-admins)
 - **RabbitMQ naming**: queue constants as `public static final String QUEUE_NAME`; bindings as `public static final List<Exchange> BINDINGS`
 - **Test pattern**: metrics counters as test assertions; JSON fixtures loaded via classpath
 - **Env vars**: SCREAMING_SNAKE_CASE with `${VAR:default}` syntax (e.g., `JDBC_URL`, `RABBITMQ_HOST`)
@@ -75,8 +78,7 @@ oda-widgets-service/
 - **Unchecked casts** widespread in `WidgetProperty.of()`, `Widget.getConfig()`, `PaymentAlertProperty` — runtime `ClassCastException` risk on malformed configs
 - **`serde.serialization.inclusion: ALWAYS`** — nulls always serialized in API responses
 - **JDK version mismatch**: pom targets JDK 25; `local.sh` pins GraalVM JDK 21
-- **`WidgetCommandListener`** applies each property patch separately calling `.save()` per property → N events per command instead of one batch
-- **Silent migration path**: `UpdateController.runUpdate()` + `Widget.save("migration")` suppresses `WidgetChangedEvent` notifications
+- **Silent migration path**: `UpdateController.runUpdate()` + `Widget.save("migration")` suppresses `WidgetChangedEvent` notifications (endpoint is admin-only)
 - **Property name collisions** documented in `WidgetProperty.java:65` (`layout` → paymentalerts/toplist) and `:108` (`backgroundImage` → goal/reel)
 - **CI externalized**: build/publish logic lives in `oda-libraries` reusable workflow, not reviewable from this repo
 - **Dockerfile** expects host-built native binary; not reproducible from source
@@ -102,7 +104,8 @@ bash local.sh
 - Two inbound channels: HTTP (Micronaut controllers) + RabbitMQ (listeners/handlers)
 - `Application.java` is `@Factory` — bootstrap fused with RabbitMQ bean wiring
 - Default env is hard-pinned to `standalone` by `@ContextConfigurer`
-- `GET /widgets` is `IS_ANONYMOUS`; all other endpoints are `IS_AUTHENTICATED`
+- `GET /widgets` is `IS_ANONYMOUS` but still returns 401 without an owner; all other endpoints are `IS_AUTHENTICATED`
+- Admin-only (role `oda-administrator`): `POST /update`, `POST /widgets/commands/dump-configs` → 403 for authenticated non-admins
 - `template/listener/TemplateCommandListener.java` is a zero-byte placeholder (never implemented)
 - Flyway schema is `widget` (both widget and template tables)
 - No JS/TS/Python tooling — quality enforced via Maven/SonarCloud/ErrorProne/NullAway
